@@ -164,6 +164,31 @@ const PlaceOrder = () => {
         </div>
         </div>
       </form>
+
+
+
+
+    {/* ---------------- DELIVERY ZONE MAP ---------------- */}
+<div className="cart-map">
+  <p className="map-text">
+    Before checkout, Please ensure the delivery zone.
+  </p>
+
+  <div className="map-wrapper">
+    <iframe
+      src="https://www.google.com/maps/d/embed?mid=10GBM7v23KfBnAifAOFeHJ36LFdgu5nA&ehbc=2E312F"
+      width="640"
+      height="480"
+      referrerPolicy="no-referrer-when-downgrade"
+    ></iframe>
+  </div>
+</div>
+
+
+
+
+
+
     </div>
   );
 };
