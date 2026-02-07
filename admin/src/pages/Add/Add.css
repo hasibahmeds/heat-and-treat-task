@@ -1,0 +1,238 @@
+/* .add{
+    width: 70%;
+    margin-left: max(5vw,25px);
+    margin-top: 50px;
+    color: #6d6d6d;
+    font-size: 16px;
+}
+
+.file{
+    color: bisque;
+}
+
+.add form{
+    gap: 20px;
+}
+
+.add-img-upload img{
+    width: 120px;
+}
+
+.add-product-name, .add-product-description{
+        width: max(40%,200px);
+}
+
+.add-product-name input, .add-product-description textarea{
+      padding: 10px;
+}
+
+.add-category-price{
+    display: flex;
+    gap: 30px;
+}
+
+.add-category-price select, .add-category-price input{
+    max-width: 120px;
+    padding: 10px;
+}
+
+.add-btn{
+    max-width: 120px;
+    border: none;
+    padding: 10px;
+    background-color: black;
+    color: white;
+    cursor: pointer;
+}
+ */
+
+
+
+
+
+/* grook */
+
+.add {
+  width: 70%;
+  /* margin-left: max(5vw, 25px); */
+  /* margin-top: 50px; */
+  margin: 60px;
+  /* color: #7c7c7c; */
+    color: #cecccc;
+  font-size: 16px;
+}
+
+.add form {
+  gap: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.add-img-upload img {
+  width: 80px;
+  cursor: pointer;
+}
+
+
+/* ... existing code ... */
+
+.url-input {
+  width: max(40%, 200px); /* Matches .add-product-name width */
+  box-sizing: border-box;
+  padding: 10px; 
+  background: rgb(61, 61, 61); 
+  color: white; 
+  border-radius: 6px;
+  border: none;
+}
+
+/* Responsive Fix for the URL input */
+@media (max-width: 768px) {
+  .url-input {
+    width: 100%;
+  }
+}
+
+/* ... rest of your existing code ... */
+
+
+
+
+
+.add-product-name,
+.add-product-description {
+  width: max(40%, 200px);
+}
+
+.add-product-name textarea,   /*input past = textarea*/
+.add-product-description textarea {
+  padding: 10px;
+  box-sizing: border-box;
+  border-radius: 6px;
+  background: rgb(61, 61, 61);
+  color: white;
+}
+
+.add-price input {
+  color: white;
+}
+
+.add-category-price {
+  /* display: flex;
+  gap: 30px; */
+  /* This makes it responsive */
+  /* flex-wrap: wrap;  */
+
+  display: flex;
+  flex-direction: column; /* This stacks them one after another */
+  gap: 20px; /* Adds space between Category and Price */
+}
+
+.add-category-price select,
+.add-category-price input {
+  /* max-width: 160px;
+  padding: 10px;
+  box-sizing: border-box;
+  border-radius: 6px;
+  background: rgb(61, 61, 61); */
+  width: max(40%, 200px); /* Matches .add-product-name width */
+  padding: 10px;
+  box-sizing: border-box;
+  border-radius: 6px;
+  background: rgb(61, 61, 61);
+}
+
+.add-btn {
+  max-width: 120px;
+  border: 1px solid #7a7979;
+  padding: 10px;
+  border-radius: 6px;
+  background-color: black;
+  color: white;
+  cursor: pointer;
+  transition: 0.1s;
+}
+
+.add-btn:active{
+  transform: translateY(1px);
+}
+
+.add input::placeholder,
+.add textarea::placeholder {
+  color: #a5a1a1; /* ← change this to any color you want */
+  opacity: 1; /* Firefox fix */
+}
+
+.add-category select {
+  color: #c9c5c5;
+  background-color: rgb(61, 61, 61);
+}
+
+.add-category select option {
+  color: #333333;
+  background-color: rgb(207, 207, 207);
+}
+
+.add-category select option:checked {
+  color: #333333;
+  background-color: rgb(207, 207, 207);
+}
+
+.add-price input[type="number"]::-webkit-inner-spin-button,
+.add-price input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none; /* ← This is the key fix! Resets default look */
+  margin: 0;
+  background-color: rgb(185, 184, 184);
+  color: rgb(0, 0, 0);
+  border-radius: 4px;
+  opacity: 1;
+  width: 12px;
+  height: 20px;
+}
+
+.add-price input[type="number"] {
+  -moz-appearance: textfield; /* Firefox: Hides spinners if you want, but keeps functionality */
+}
+
+/* Responsive Fixes - Only stack when needed */
+@media (max-width: 768px) {
+  .add {
+    width: 35%;
+    margin: 60px;
+  }
+
+  .add-category-price {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .add-category-price > div {
+    width: 100%;
+  }
+
+  .add-category-price select,
+  .add-category-price input {
+    max-width: 100%;
+  }
+
+  .add-product-name,
+  .add-product-description {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .add {
+    width: 50%;
+    margin: 60px;
+  }
+
+  .add-img-upload img {
+    width: 80px;
+  }
+
+  .add-btn {
+    width: 50%;
+    max-width: none;
+  }
+}

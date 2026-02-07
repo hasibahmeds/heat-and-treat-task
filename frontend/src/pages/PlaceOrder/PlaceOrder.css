@@ -1,0 +1,334 @@
+/* .place-order {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 50px;
+  margin-top: 100px;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.place-order-left {
+  width: 100%;
+  max-width: max(30%, 500px);
+}
+.place-order-left .title {
+  font-size: 30px;
+  font-weight: 200;
+  margin-bottom: 45px;
+  color: #ff3c00;
+}
+
+.place-order-left input {
+  margin-bottom: 15px;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #c5c5c5;
+  outline-color: tomato;
+}
+
+.place-order-left .multi-fields {
+  display: flex;
+  gap: 10px;
+}
+
+.place-order-right {
+  width: 100%;
+  max-width: max(40%, 500px);
+}
+
+.place-order .cart-total button {
+  margin-top: 30px;
+}
+
+
+ .hr {
+  height: 1px;
+  background-color: #ffffff;
+  border: none;
+} */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ============================= */
+/*       PlaceOrder.css          */
+/*   Final Perfect Version       */
+/* ============================= */
+
+.place-order {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 50px;
+  margin: 80px auto;
+  padding: 0 20px;
+  width: 80%;
+  max-width: 1200px;
+}
+
+/* Delivery Information Card */
+.place-order-left {
+  width: 100%;
+  max-width: max(30%, 500px);
+  border: 1px solid;
+  border-radius: 15px;
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  border: 1px solid #464545;
+}
+
+.place-order-left .title {
+  font-size: 30px;
+  font-weight: 500;
+  margin-bottom: 35px;
+  color: #ff2600;
+}
+
+.place-order-left input,
+.place-order-left textarea.address-textarea {
+  margin-bottom: 15px;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid gray;
+  border-radius: 5px;
+  background: transparent;
+  color: white;
+  font-size: 16px;
+  font-family: inherit;
+  box-sizing: border-box;           /* Critical for textarea */
+  outline: none;
+}
+
+.place-order-left input::placeholder,
+.place-order-left textarea.address-textarea::placeholder {
+  color: #aaa;
+}
+
+/* Special fix for textarea (Street, City, District) */
+.address-textarea {
+  min-height: 50px;
+  height: 0px;
+  resize: vertical;
+  line-height: 1.4;
+  overflow: hidden;
+}
+
+.place-order-left .multi-fields {
+  display: flex;
+  gap: 10px;
+}
+
+/* Cart Totals Card */
+.place-order-right {
+  width: 100%;
+  max-width: max(40%, 500px);
+  border: 1px solid #464545;
+  border-radius: 15px;
+}
+
+.place-order-right .cart-total {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.place-order-right .cart-total h2 {
+  color: #ff2600;
+  text-align: left;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+.cart-total-details {
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 16px;
+}
+
+.cart-total-details b {
+  color: white;
+}
+
+.hr {
+  height: 1px;
+  background-color: #979797d7;
+  border: none;
+  margin: 8px 0;
+}
+
+/* PLACE ORDER Button */
+.place-order .cart-total button {
+  margin-top: 30px;
+  border: none;
+  color: wheat;
+  font-size: 13px;
+  font-weight: 600;
+  background-color: #ff2600;
+  width: max(7vw, 105px);
+  padding: 6px 0;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: 0.1s;
+}
+
+.place-order .cart-total button:active {
+  transform: translateY(1px);
+}
+
+
+
+
+
+/* ---------------- MAP SECTION ---------------- */
+
+.cart-map {
+  width: 60%;
+  /* margin-top: 50px; */
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid #464545;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.map-text {
+  color: #ff2600;
+  font-size: 16px;
+  margin-bottom: 15px;
+  font-weight: 400;
+}
+
+.map-wrapper {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.map-wrapper iframe {
+  width: 100%;
+  height: 450px;
+  border: none;
+  border-radius: 12px;
+}
+
+
+
+
+
+/* ---------------- PAYMENT BUTTON FIX ---------------- */
+
+.payment-buttons {
+  display: flex;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+/* COD Button */
+.cod-btn {
+  flex: 1;
+  border: none;
+  color: wheat;
+  font-size: 13px;
+  font-weight: 600;
+  background-color: #ff2600;
+  padding: 8px 0;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Online Payment Button */
+.online-btn {
+  flex: 1;
+  border: 1px solid #ff2600;
+  background: transparent;
+  color: #ff2600;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 0;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+
+
+
+
+
+
+
+
+/* Responsive map height */
+@media (max-width: 750px) {
+  .map-wrapper iframe {
+    height: 320px;
+  }
+}
+
+@media (max-width: 450px) {
+  .map-wrapper iframe {
+    height: 260px;
+  }
+
+  .map-text {
+    font-size: 14px;
+  }
+}
+
+
+
+
+
+
+
+
+
+/* Responsive: Mobile & Tablet (≤900px) */
+@media (max-width: 900px) {
+  .place-order {
+    gap: 40px;
+  }
+
+  .place-order-left .title {
+    font-size: 26px;
+    text-align: center;
+  }
+
+  .place-order-left .multi-fields {
+    flex-direction: column;
+  }
+
+  .place-order .cart-total button {
+    width: 100%;
+    max-width: 300px;
+    margin: 20px auto 0;
+    display: block;
+  }
+
+  .payment-buttons {
+  flex-direction: column;
+}
+}
+
+/* Large Screens (≥901px) → Side by Side */
+@media (min-width: 901px) {
+  .place-order {
+    flex-wrap: nowrap;
+  }
+}

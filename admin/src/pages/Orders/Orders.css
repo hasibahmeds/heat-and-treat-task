@@ -1,0 +1,231 @@
+/* --- SEARCH BAR STYLES --- */
+.order-search {
+  margin: 20px 0;
+  width: 100%;
+}
+
+.order-search input {
+  width: 100%;
+  max-width: 400px;
+  padding: 12px 15px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid #464545;
+  color: #e0e0e0;
+  border-radius: 4px;
+  outline: none;
+  font-size: 14px;
+}
+
+.order-search input:focus {
+  /* border-color: #ff2600c7; */
+  border: 1px solid #c2c0c0c7;
+}
+
+.no-orders {
+  color: #b1adad;
+  padding: 20px;
+  text-align: center;
+}
+
+/* Ensure search bar stays consistent across devices */
+@media (max-width: 480px) {
+  .order-search input {
+    max-width: 100%;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.order-item {
+  display: grid;
+  grid-template-columns: 0.5fr 2fr 1fr 1fr 1fr;
+  align-items: start;
+  gap: 40px;
+  padding: 20px;
+  margin: 30px 0px;
+  font-size: 14px;
+  color: #b1adad;
+  /* border: 0px solid; */
+  border: 1px solid #464545;
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  text-align: justify;
+}
+
+
+
+.order h3 {
+   color: rgb(231, 231, 231);
+  font-weight: 300;
+  font-size: 21px;
+}
+
+.order-item .box {
+  height: 48px;
+  width: 48px;
+  color: #ff2600;
+}
+
+
+
+.oid{
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.order-item-name {
+  font-weight: 600;
+}
+
+
+.order-item-phone{
+  font-weight: 600;
+}
+
+.order-item-name {
+  margin-top: 30px;
+  margin-bottom: 5px;
+}
+
+.order-item-address {
+  margin-bottom: 10px;
+}
+
+.order-item select {
+  background-color: #9e9c9c;
+  border: 0px solid;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  width: max(10vw, 139px);
+  padding: 10px;
+  outline: none;
+}
+
+
+
+
+
+
+
+
+/* Layout helper for select and delete button */
+.order-item-action {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.delete-order-btn {
+  background-color: #ff2600;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-weight: bold;
+  border-radius: 4px;
+  transition: 0.3s;
+}
+
+.delete-order-btn:hover {
+  background-color: #fd2600f3;
+}
+
+
+
+
+
+
+
+
+
+/* Update grid to accommodate the action container if needed */
+@media (max-width: 1000px) {
+  .order-item-action {
+    margin-top: 10px;
+    justify-content: flex-start;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+@media (max-width: 1000px) {
+  .order-item {
+    font-size: 12px;
+    grid-template-columns: 1fr;
+    padding: 15px 8px;
+    width: 70%;
+    padding: 15px;
+  }
+
+  .order-item select {
+    padding: 5px;
+    font-size: 12px;
+  }
+
+  .order-item img {
+    width: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .order-item {
+    /* font-size: 12px; */
+    grid-template-columns: 1fr;
+    padding: 16px;
+    width: 125%;
+  }
+}
+
+@media (max-width: 788px) {
+  .order-item {
+    /* font-size: 12px; */
+    grid-template-columns: 1fr;
+    padding: 19px;
+  }
+}
+
+
+
+
+@media (max-width: 560px) {
+      .order-item{
+        width: 260px;
+        padding: 10px;
+      }
+}
+
+@media (max-width: 480px) {
+  .order-item {
+    /* font-size: 12px; */
+    grid-template-columns: 1fr;
+    /* padding: 15px; */
+    width: 150%;
+        padding: 10px;
+  }
+
+  .order {
+    margin-left: 15px;
+  }
+}

@@ -1,0 +1,399 @@
+/* 
+.list p{
+    color: rgb(179, 180, 180);
+}
+
+
+
+.list-table-format{
+    display: grid;
+    grid-template-columns: 0.5fr 2fr 1fr 1fr 0.5fr;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 15px;
+    border: 1px solid #464545;
+    font-size: 13px;
+}
+
+.list-table-format.title{
+    background-color: #ff2600;
+    color: black;
+}
+
+.list-table-format img{
+    width: 50px;
+}
+
+@media (max-width:600px) {
+    .list-table-format{
+        grid-template-columns: 1fr 3fr 1fr;
+        gap: 15px;
+    }
+    .list-table-format.title{
+        display: none;
+    }
+} */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* .list p {
+  color: rgb(179, 180, 180);
+}
+
+
+.list-table-format {
+  display: grid;
+  grid-template-columns: 0.5fr 2fr 1fr 1fr 0.5fr;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 15px;
+  border: 1px solid #464545;
+  font-size: 13px;
+}
+
+.list-table-format.title {
+  background-color: #ff2600;
+  color: black;
+}
+
+.list-table-format img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.list-table-format .cell-action{
+    color: black;
+    background: #ff2600;
+}
+
+
+.cursor {
+  cursor: pointer;
+}
+
+
+.list-loading,
+.list-empty {
+  padding: 12px 15px;
+  font-size: 14px;
+  color: rgb(179, 180, 180);
+  border: 1px solid #464545;
+}
+
+
+@media (max-width: 767.98px) {
+  .list-table-format {
+    grid-template-columns: 1fr 3fr 1fr;
+    grid-template-areas:
+      "image name"
+      "category price"
+      "action action";
+  }
+
+  .list-table-format.title {
+    display: none; 
+  }
+
+  .list-table-format img {
+    grid-area: image;
+  }
+
+  .cell-name {
+    grid-area: name;
+  }
+
+  .cell-category {
+    grid-area: category;
+  }
+
+  .cell-price {
+    grid-area: price;
+  }
+
+  .cell-action {
+    grid-area: action;
+    justify-self: start;
+  }
+}
+
+
+@media (min-width: 768px) {
+  .cell-action {
+    justify-self: center;
+  }
+} */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Main Container & Title */
+.list-table .Para {
+  margin-bottom: 15px;
+  color: rgb(231, 231, 231);
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+/* Grid Layout Definition */
+.list-table-format {
+  display: grid;
+  /* Columns: Index, Image, Name (flexible), Category, Price, Action */
+  grid-template-columns: 0.4fr 0.6fr 2fr 1.2fr 1fr 0.6fr;
+  align-items: center;
+  gap: 20px;
+  padding: 12px 15px;
+  border: 1px solid #464545;
+  color: rgb(224, 224, 224);
+  font-size: 13px;
+  background-color: #000;
+}
+
+/* Table Header Styling */
+.list-table-format.title {
+  background-color: #ff2600;
+  color: #000;
+  font-weight: bold;
+  border: 1px solid #ff2600;
+}
+
+/* Image Styling */
+.list-table-format img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid #333;
+}
+
+/* Cell Specific Styles */
+.cell-index {
+  text-align: center;
+  font-weight: 600;
+  color: #ff2600;
+}
+
+.cell-name,
+.cell-category,
+.cell-price {
+  white-space: normal;
+  word-break: break-word;
+  line-height: 1.4;
+}
+
+/* Action Buttons (Edit/Delete) */
+.cell-action {
+  display: flex;
+  align-items: center;
+  /* gap: 8px; */
+  gap: 12px;
+}
+
+.edit-btn, .delete-btn {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  cursor: pointer;
+  border: none;
+  font-size: 14px;
+  transition: opacity 0.2s;
+}
+
+.edit-btn {
+  /* background: #ff8c00; */
+  background: #ff2600;
+  color: white;
+}
+
+.delete-btn {
+  background: #ff2600;
+  color: white;
+}
+
+.edit-btn:hover, .delete-btn:hover {
+  opacity: 0.8;
+}
+
+/* Input, Textarea, and Select Styling for Edit Mode */
+.edit-input {
+  padding: 8px;
+  border: 1px solid #ff2600;
+  background: #1a1a1a;
+  color: white;
+  border-radius: 4px;
+  font-size: 13px;
+  width: 100%;
+  outline: none;
+}
+
+textarea.edit-input {
+  resize: vertical;
+  font-family: inherit;
+  min-height: 40px;
+}
+
+select.edit-input {
+  cursor: pointer;
+  appearance: auto; /* Ensures the dropdown arrow is visible */
+}
+
+/* Full Row Editing (Description & Image Upload Section) */
+.edit-full-row {
+  grid-column: 1 / -1;
+  padding: 20px;
+  background: #111;
+  border: 1px solid #464545;
+  border-top: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.edit-full-row p {
+  color: #ff2600;
+  font-size: 12px;
+  font-weight: bold;
+  margin-bottom: -8px;
+}
+
+.edit-full-row textarea {
+  padding: 10px;
+  background: #222;
+  color: white;
+  border: 1px solid #464545;
+  border-radius: 4px;
+  resize: vertical;
+  outline: none;
+}
+
+.edit-full-row textarea:focus {
+  border-color: #ff2600;
+}
+
+/* Footer Actions */
+.edit-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.save-btn, .cancel-btn {
+  padding: 6px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.save-btn { background: #ff2600; color: white; }
+.cancel-btn { background: #444; color: white; }
+
+/* ---------------------------------------------------
+   RESPONSIVE DESIGN (sm, md, lg, xl)
+--------------------------------------------------- */
+
+/* Mobile (Small Devices - sm) */
+@media (max-width: 600px) {
+  .list-table-format {
+    grid-template-columns: 1fr; /* Stack everything */
+    gap: 10px;
+    padding: 15px;
+    text-align: left;
+  }
+  
+  .list-table-format.title {
+    display: none; /* Hide headers on mobile */
+  }
+
+  .list-table-format img {
+    width: 80px;
+    height: 80px;
+  }
+
+  .cell-price {
+    color: #ff2600;
+    font-weight: bold;
+    font-size: 16px;
+  }
+
+  .edit-actions {
+    flex-direction: row;
+  }
+}
+
+/* Tablets (Medium Devices - md) */
+@media (min-width: 601px) and (max-width: 1024px) {
+  .list-table-format {
+    grid-template-columns: 0.3fr 0.6fr 1.5fr 1fr 0.8fr 0.6fr;
+    gap: 15px;
+    font-size: 12px;
+  }
+}
+
+/* Desktop (Large Devices - lg) */
+@media (min-width: 1025px) and (max-width: 1440px) {
+  .list-table {
+    max-width: 95%;
+    margin: 0 auto;
+  }
+  .list-table-format {
+    grid-template-columns: 0.4fr 0.6fr 2fr 1.2fr 1fr 0.6fr;
+  }
+}
+
+/* Ultra Wide (Extra Large - xl) */
+@media (min-width: 1441px) {
+  .list-table {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .list-table-format {
+    font-size: 15px;
+    padding: 15px 20px;
+  }
+}

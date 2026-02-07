@@ -1,0 +1,199 @@
+.food-item{
+    width: 100%;
+    margin: auto;
+    border-radius: 15px;
+    box-shadow: 0px 0px 10px #00000015;
+    /* box-shadow: 0px 0px 10px 2px #ffffff0b; */
+    transition: 0.3s;
+    animation: fadeIn 1s;
+    /* background: rgb(255, 251, 249); */
+    background: rgb(250, 249, 249);
+}
+
+.food-item-img-container{
+    position: relative;
+    width: 100%;
+    /* Fixed height for the image container - adjust as needed */
+    height: 250px; 
+    /* height: 65px; */   /* if do not want to use image*/
+    overflow: hidden;
+}
+
+.food-item-image{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 15px 15px 0px 0px;
+    /* border: 1px solid #6b6b6b; */
+}
+
+.food-item-info{
+    padding: 20px;
+}
+
+.food-item-name-rating{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.food-item-name-rating p{
+    font-size: 20px;
+    font-weight: 500;
+    word-break: break-word;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;         /* Limits to 2 lines */
+    -webkit-box-orient: vertical;  
+    line-height: 1.3;
+    max-height: 52px;              /* Roughly matches 2 lines */
+}
+
+.food-item-name-rating img{
+    width: 70px;
+}
+
+.food-item-desc{
+    color: #676767;
+    font-size: 12px;
+}
+
+.food-item-price{
+    color: #ff2600;
+    font-size: 22px;
+    font-weight: 500;
+    margin: 10px 0px;
+}
+
+.food-item-img-container .add{
+    width: 35px;
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: 0.1s;
+}
+
+.food-item-img-container .add:active{
+      transform: translateY(1px);
+}
+
+.food-item-counter{
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px;
+    border-radius: 50px;
+    background-color: #ffffff;
+}
+
+.food-item-counter img{
+    width: 23px;
+}
+
+/* NEW: Control description overflow only on md+ screens */
+@media (min-width: 768px) {
+  .food-item-info {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    max-height: 220px;
+    overflow: hidden;
+  }
+  .food-item-name-rating {
+    margin-bottom: 10px;
+    flex-shrink: 0; /* Prevent name/rating from shrinking */
+  }
+  .food-item-desc {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 10px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #676767;
+    scrollbar-width: thin;
+    scrollbar-color: #ff2600 transparent;
+  }
+  .food-item-desc::-webkit-scrollbar {
+    width: 6px;
+  }
+  .food-item-desc::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .food-item-desc::-webkit-scrollbar-thumb {
+    background-color: #ff2600;
+    border-radius: 3px;
+  }
+  .food-item-price {
+    flex-shrink: 0;
+    margin: 0;
+  }
+}
+
+/* Optional: Keep small font on mobile (below md) */
+@media (max-width: 767px) {
+  .food-item-desc {
+    font-size: 12px;
+  }
+}
+
+@media (min-width: 768px) {
+  .food-item {
+    height: 100%;
+  }
+  .food-item-info {
+    height: 185px;
+  }
+}
+
+/* NEW: Apply scrollable description for 653px to 767px (smaller tablets) */
+@media (min-width: 653px) and (max-width: 767px) {
+  .food-item-info {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    max-height: 220px;
+    overflow: hidden;
+  }
+  .food-item-name-rating {
+    margin-bottom: 10px;
+    flex-shrink: 0;
+  }
+  .food-item-desc {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 10px;
+    margin-bottom: 10px;
+    font-size: 13px;
+    line-height: 1.4;
+    color: #676767;
+    scrollbar-width: thin;
+    scrollbar-color: #ff2600 transparent;
+  }
+  .food-item-desc::-webkit-scrollbar {
+    width: 6px;
+  }
+  .food-item-desc::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .food-item-desc::-webkit-scrollbar-thumb {
+    background-color: #ff2600;
+    border-radius: 3px;
+  }
+  .food-item-price {
+    flex-shrink: 0;
+    margin: 0;
+  }
+  .food-item {
+    height: 100%;
+  }
+  .food-item-info {
+    height: 193px;
+  }
+}
