@@ -12,22 +12,36 @@ export const sslInit = async (req, res) => {
   try {
 
         console.log("SSL INIT BODY:", req.body); // 👈 ADD THIS
-
-
     const userId = req.body.userId;
-const items = req.body.items || [];
-const amount = req.body.amount;
-const address = req.body.address || {};
-const customer = req.body.customer || {};
+    const items = req.body.items || [];
+    const amount = req.body.amount;
+    const address = req.body.address || {};
+    const customer = req.body.customer || {};
 
     const tran_id = "TXN_" + Date.now();
 
-    // Create order first (PENDING)
+    // Normalize/merge address so admin UI has firstName/lastName/email/phone
+    const nameParts = (customer.name || address.name || "").trim().split(" ");
+    const firstNameFromName = nameParts.length ? nameParts[0] : "";
+    const lastNameFromName = nameParts.length > 1 ? nameParts.slice(1).join(" ") : "";
+
+    const addressMerged = {
+      firstName: customer.firstName || address.firstName || firstNameFromName || "",
+      lastName: customer.lastName || address.lastName || lastNameFromName || "",
+      email: customer.email || address.email || "",
+      phone: customer.phone || address.phone || "",
+      street: address.street || address.address || customer.address || "",
+      address: address.street || address.address || customer.address || "",
+      city: address.city || customer.city || "",
+      district: address.district || "",
+    };
+
+    // Create order first (PENDING) and save normalized address
     const order = await orderModel.create({
       userId,
       items,
       amount,
-      address,
+      address: addressMerged,
       payment: false,
       transactionId: tran_id,
       paymentStatus: "pending"
@@ -47,11 +61,11 @@ const customer = req.body.customer || {};
       product_category: "Food",
       product_profile: "general",
 
-cus_name: customer.name || "Customer",
-cus_email: customer.email || "customer@email.com",
-cus_phone: customer.phone || "01700000000",
-cus_add1: address.street || "Dhaka",
-cus_city: address.city || "Dhaka",
+      cus_name: (addressMerged.firstName || "") + (addressMerged.lastName ? " " + addressMerged.lastName : "") || "Customer",
+      cus_email: addressMerged.email || "customer@email.com",
+      cus_phone: addressMerged.phone || "01700000000",
+      cus_add1: addressMerged.street || "Dhaka",
+      cus_city: addressMerged.city || "Dhaka",
     };
 
     const sslcz = new SSLCommerzPayment(store_id, store_passwd, is_live);
