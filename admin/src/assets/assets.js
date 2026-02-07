@@ -18,4 +18,5 @@ export const assets ={
     parcel_icon
 }
 
-export const url = 'http://localhost:4000'
+export const url = 'https://heat-and-treat-task-backend.onrender.com'
+// export const url = 'http://localhost:4000'
