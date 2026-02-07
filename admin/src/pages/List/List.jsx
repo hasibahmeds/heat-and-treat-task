@@ -300,7 +300,8 @@ import './List.css';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-const List = ({ url = 'http://localhost:4000' }) => {
+// const List = ({ url = 'http://localhost:4000' }) => {
+const List = ({ url = 'https://heat-and-treat-task-backend.onrender.com' }) => {
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [editItem, setEditItem] = useState(null); 
