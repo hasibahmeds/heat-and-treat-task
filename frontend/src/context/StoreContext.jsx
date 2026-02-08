@@ -107,8 +107,17 @@ export const StoreContext = createContext(null);
 const StoreContextProvider = (props) => {
   const [cartItems, setCartItems] = useState({});
   const [userEmail, setUserEmail] = useState("");
-  // Use Vite env var `VITE_API_URL` when available (deployed), fallback to localhost for local dev
-  const url = import.meta.env.VITE_API_URL || "http://localhost:4000";
+  // Use Vite env var `VITE_API_URL` when available.
+  // - In local dev: fall back to localhost:4000
+  // - In deployed env without VITE_API_URL: fall back to current origin (assumes backend is same host)
+  const url = import.meta.env.VITE_API_URL ?? (window.location.hostname === "localhost" ? "http://localhost:4000" : window.location.origin);
+
+  if (!import.meta.env.VITE_API_URL && window.location.hostname !== "localhost") {
+    // Helpful warning for deployed builds where the env var wasn't provided
+    // The preferred fix is to set `VITE_API_URL` in Render (or your hosting) to the backend URL.
+    // Example: https://your-backend.onrender.com
+    console.warn("VITE_API_URL not set — using ", window.location.origin, " as API base. Set VITE_API_URL in Render environment variables to your backend URL for cross-origin requests.");
+  }
 
   const [token, setToken] = useState("");
   const [food_list, setFoodList] = useState([]);
