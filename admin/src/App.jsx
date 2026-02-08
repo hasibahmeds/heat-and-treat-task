@@ -80,7 +80,8 @@ const RequireAllowed = ({ children }) => {
 };
 
 const App = () => {
-  // backend URL is provided by `admin/src/assets/assets.js` (Vite env `VITE_API_URL`)
+  // Use `url` imported from assets (VITE_API_URL or render URL)
+
 
   return (
     <AuthProvider>

@@ -243,8 +243,8 @@
 import { useState } from "react";
 import { assets } from "../../assets/assets";
 import "./Add.css";
-import axios from "axios";
 import { toast } from "react-toastify";
+import { requestWithFallback } from '../../assets/api';
 
 const Add = ({ url }) => {
   const [image, setImage] = useState(false);
@@ -279,7 +279,9 @@ const Add = ({ url }) => {
       formData.append("imageUrl", imageUrl);
     }
 
-    const response = await axios.post(`${url}/api/food/add`, formData);
+    const response = await requestWithFallback('post', '/api/food/add', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
     if (response.data.success) {
       setData({
         name: "",

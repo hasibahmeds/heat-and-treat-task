@@ -117,10 +117,10 @@
 
 import { useState } from 'react'
 import './Orders.css'
-import axios from 'axios';
 import { toast } from "react-toastify"
 import { useEffect } from 'react';
 import { BsBoxSeamFill } from "react-icons/bs";
+import { requestWithFallback } from '../../assets/api';
 
 const Orders = ({ url }) => {
 
@@ -145,39 +145,46 @@ const Orders = ({ url }) => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const fetchAllOrders = async () => {
-    const response = await axios.get(url + "/api/order/list");
-    if (response.data.success) {
-      setOrders(response.data.data);
-    }
-    else {
-      toast.error("Error")
+    try {
+      const response = await requestWithFallback('get', '/api/order/list');
+      if (response.data.success) {
+        setOrders(response.data.data);
+      } else {
+        toast.error(response.data?.message || 'Error');
+      }
+    } catch (err) {
+      toast.error('Network error');
     }
   }
 
   const statusHandler = async (event, orderId) => {
-    const response = await axios.post(url + "/api/order/status", {
-      orderId,
-      status: event.target.value
-    })
-    if (response.data.success) {
-      await fetchAllOrders();
+    try {
+      const response = await requestWithFallback('post', '/api/order/status', {
+        orderId,
+        status: event.target.value,
+      });
+      if (response.data.success) {
+        await fetchAllOrders();
+      }
+    } catch (err) {
+      toast.error('Network error');
     }
   }
 
   // --- NEW DELETE FUNCTION ---
   const deleteOrder = async (orderId) => {
     if (window.confirm("Are you sure you want to delete this order permanently?")) {
-      try {
-        const response = await axios.post(url + "/api/order/delete", { orderId });
-        if (response.data.success) {
-          toast.success(response.data.message);
-          await fetchAllOrders();
-        } else {
-          toast.error("Error deleting order");
+        try {
+          const response = await requestWithFallback('post', '/api/order/delete', { orderId });
+          if (response.data.success) {
+            toast.success(response.data.message);
+            await fetchAllOrders();
+          } else {
+            toast.error('Error deleting order');
+          }
+        } catch (error) {
+          toast.error('Network error');
         }
-      } catch (error) {
-        toast.error("Network error");
-      }
     }
   }
 

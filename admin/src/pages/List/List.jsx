@@ -297,12 +297,13 @@
 
 import { useEffect, useState } from 'react';
 import './List.css';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import { url } from '../../assets/assets';
+import { requestWithFallback } from '../../assets/api';
 
 
-const List = () => {
+// const List = ({ url = 'http://localhost:4000' }) => {
+const List = ({ url = 'https://heat-and-treat-task-backend.onrender.com' }) => {
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [editItem, setEditItem] = useState(null); 
@@ -318,7 +319,7 @@ const List = () => {
   const fetchList = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${url}/api/food/list`);
+      const response = await requestWithFallback('get', '/api/food/list');
       if (response.data && response.data.success) {
         setList(response.data.data || []);
       } else {
@@ -350,7 +351,7 @@ const removeFood = async (foodId) => {
     // Added confirmation alert
     if (window.confirm("Are you sure you want to remove this item?")) {
       try {
-        const response = await axios.post(`${url}/api/food/remove`, { id: foodId });
+        const response = await requestWithFallback('post', '/api/food/remove', { id: foodId });
         if (response.data && response.data.success) {
           toast.success(response.data.message || 'Item removed');
           await fetchList();
@@ -399,7 +400,9 @@ const removeFood = async (foodId) => {
     }
 
     try {
-      const response = await axios.post(`${url}/api/food/update`, data);
+      const response = await requestWithFallback('post', '/api/food/update', data, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
       if (response.data.success) {
         toast.success(response.data.message);
         await fetchList();

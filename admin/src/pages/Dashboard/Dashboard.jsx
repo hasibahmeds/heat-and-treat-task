@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import "./Dashboard.css";
 import {
   LineChart,
@@ -11,6 +10,7 @@ import {
   BarChart,
   Bar
 } from "recharts";
+import { requestWithFallback } from '../../assets/api';
 
 
 const Dashboard = ({ url }) => {
@@ -19,8 +19,12 @@ const Dashboard = ({ url }) => {
 const [chartData, setChartData] = useState([]);
 
 const fetchCharts = async () => {
-  const res = await axios.get(`${url}/api/analytics/daily`);
-  if (res.data.success) setChartData(res.data.data);
+  try {
+    const res = await requestWithFallback('get', '/api/analytics/daily');
+    if (res.data.success) setChartData(res.data.data);
+  } catch (err) {
+    // ignore or log
+  }
 };
 
 useEffect(() => {
@@ -31,8 +35,12 @@ useEffect(() => {
   const [stats, setStats] = useState(null);
 
   const fetchStats = async () => {
-    const res = await axios.get(`${url}/api/dashboard/stats`);
-    if (res.data.success) setStats(res.data.data);
+    try {
+      const res = await requestWithFallback('get', '/api/dashboard/stats');
+      if (res.data.success) setStats(res.data.data);
+    } catch (err) {
+      // ignore or log
+    }
   };
 
   useEffect(() => {
