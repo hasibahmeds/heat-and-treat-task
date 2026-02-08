@@ -22,3 +22,4 @@ export const assets ={
 // Primary API URL: prefer VITE_API_URL, otherwise use the production Render URL.
 export const url = import.meta.env.VITE_API_URL || 'https://heat-and-treat-task-backend.onrender.com'
 // Local fallback (useful when running backend locally)
+export const fallbackUrl = 'http://localhost:4000'
