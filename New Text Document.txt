@@ -2,6 +2,8 @@ frontend, backend + admin + admin log in-out-acc-cre suceesfully workred + all f
 perfect last stays
 
 
+
+
 project live korar somoy hobaho follow(yt). + also change the "http://localhost:4000" in Admin(List.jsx, App.jsx)
 
 
@@ -152,3 +154,37 @@ doita use kora hoise.
 
 database change korle, connection method hobe mongoose, last e /? thaka obosthay npm run server. 
 tapor database er nam ta (?) er gaghay bosaiya npm run server.
+
+
+
+
+
+
+
+
+
+if create problem:
+
+
+i deploy this project in render. then new url for backend is "https://heat-and-treat-task-backend.onrender.com".
+
+
+frontend, backend deploy perfectly. admin also deploy but for the admin the data does not come from the backend
+
+
+fix this.
+
+
+
+ans>
+
+
+admin 
+.env te VITE_API_URL=""
+
+assets.js ( both url together export)
+List.jsx
+App.jsx
+
+Front-end
+StoreContext.js ( both url together)

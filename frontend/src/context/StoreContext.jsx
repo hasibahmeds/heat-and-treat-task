@@ -106,8 +106,9 @@ export const StoreContext = createContext(null);
 
 const StoreContextProvider = (props) => {
   const [cartItems, setCartItems] = useState({});
-  const [userEmail, setUserEmail] = useState(""); 
-  const url = "http://localhost:4000";
+  const [userEmail, setUserEmail] = useState("");
+  // Use Vite env var `VITE_API_URL` when available (deployed), fallback to localhost for local dev
+  const url = import.meta.env.VITE_API_URL || "http://localhost:4000";
   const [token, setToken] = useState("");
   const [food_list, setFoodList] = useState([]);
 

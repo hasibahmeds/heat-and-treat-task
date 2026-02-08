@@ -299,8 +299,10 @@ import { useEffect, useState } from 'react';
 import './List.css';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { url } from '../../assets/assets';
 
-const List = ({ url = 'http://localhost:4000' }) => {
+
+const List = () => {
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [editItem, setEditItem] = useState(null); 

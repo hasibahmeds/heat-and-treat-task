@@ -18,4 +18,5 @@ export const assets ={
     parcel_icon
 }
 
-export const url = 'http://localhost:4000'
+// Prefer Vite env var `VITE_API_URL`, fallback to localhost for local dev
+export const url = import.meta.env.VITE_API_URL || 'http://localhost:4000'

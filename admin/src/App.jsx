@@ -44,6 +44,8 @@ import Orders from "./pages/Orders/Orders";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+import { url } from "./assets/assets";
+
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { ALLOWED_EMAILS } from "./authConfig";
 
@@ -78,7 +80,7 @@ const RequireAllowed = ({ children }) => {
 };
 
 const App = () => {
-  const url = "http://localhost:4000";
+  // backend URL is provided by `admin/src/assets/assets.js` (Vite env `VITE_API_URL`)
 
   return (
     <AuthProvider>
