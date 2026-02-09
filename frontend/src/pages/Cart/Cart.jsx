@@ -249,7 +249,7 @@ const Cart = () => {
             </b>
           </div>
 
-          {/* <button onClick={() => navigate("/order")}>CHECKOUT</button> */}
+          <button onClick={() => navigate("/order")}>CHECKOUT</button>
         </div>
       </div>
 
