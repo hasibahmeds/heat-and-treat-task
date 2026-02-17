@@ -121,8 +121,12 @@ import { toast } from "react-toastify"
 import { useEffect } from 'react';
 import { BsBoxSeamFill } from "react-icons/bs";
 import { requestWithFallback } from '../../assets/api';
+import { useNavigate } from "react-router-dom";
+
 
 const Orders = ({ url }) => {
+
+  const navigate = useNavigate();
 
   const formatDate = (isoDate) => {
     const date = new Date(isoDate);
@@ -249,7 +253,14 @@ const Orders = ({ url }) => {
                   <option value="Delivered">Delivered</option>
                   <option value="Cancelled">Cancelled</option>
                 </select>
+                                <button
+  className="invoice-btn"
+  onClick={() => navigate("/invoice", { state: { order } })}
+>
+  Invoice
+</button>
                 <button onClick={() => deleteOrder(order._id)} className='delete-order-btn'>X</button>
+
               </div>
             </div>
           ))

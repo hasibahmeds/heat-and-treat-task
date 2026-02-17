@@ -1,0 +1,14 @@
+.dbutton {
+  background-color: #ff2600;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-top: 20px;
+}
+
+.hed{
+    color: #ff2600;
+    font-weight: 300;
+}

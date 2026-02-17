@@ -7,10 +7,89 @@
   font-family: Outfit;
   scroll-behavior: smooth;
 }
+
 body{
   min-height: 100vh;
-    background-color: #0c0a09;
+  background-color: #0c0a09;
 }
+
+
+
+
+
+
+
+
+
+
+
+/* to make navbar fixed */
+
+body > div:first-child,         
+.app,
+.hero,
+.explore-menu,
+.food-display {
+  padding-top: 50px;         
+}
+
+/* .hero {
+  padding-top: 130px;            
+} */
+
+
+@media (max-width: 768px) {
+body > div:first-child,         
+.app,
+.hero,
+.explore-menu,
+.food-display {
+  padding-top: 40px;            
+}
+}
+
+@media (max-width: 480px) {
+body > div:first-child,          
+.app,
+.hero,
+.explore-menu,
+.food-display {
+  padding-top: 40px;         
+}
+}
+
+
+@media (min-width: 769px) and (max-width: 1024px) {
+body > div:first-child,          
+.app,
+.hero,
+.explore-menu,
+.food-display {
+  padding-top: 40px;           
+}
+}
+
+
+@media (min-width: 1441px) {
+body > div:first-child,        
+.app,
+.hero,
+.explore-menu,
+.food-display {
+  padding-top: 40px;           
+}
+}
+
+/* to make navbar fixed */
+
+
+
+
+
+
+
+
+
 a{
   text-decoration: none;
   color: inherit;

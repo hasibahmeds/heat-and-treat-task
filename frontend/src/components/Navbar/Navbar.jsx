@@ -5,11 +5,11 @@ import { Link, useNavigate } from 'react-router-dom'
 import { StoreContext } from '../../context/StoreContext'
 import { CgClose, CgProfile } from "react-icons/cg"
 import { FaBasketShopping } from "react-icons/fa6"
-import { BsBagCheck } from "react-icons/bs";
+import { BsBagCheck } from "react-icons/bs"
 import { RiLogoutBoxRLine, RiMenu3Line } from "react-icons/ri"
-import { TfiHome } from "react-icons/tfi";
-import { RiMenuAddLine } from "react-icons/ri";
-import { GrContact } from "react-icons/gr";
+import { TfiHome } from "react-icons/tfi"
+import { RiMenuAddLine } from "react-icons/ri"
+import { GrContact } from "react-icons/gr"
 
 const Navbar = ({ setShowLogin }) => {
   const navigate = useNavigate()
@@ -19,7 +19,7 @@ const Navbar = ({ setShowLogin }) => {
 
   const logout = () => {
     localStorage.removeItem("token")
-    localStorage.removeItem("userEmail") // ← Clear saved email
+    localStorage.removeItem("userEmail")
     setToken("")
     navigate("/")
     setMobileMenuOpen(false)
@@ -28,30 +28,62 @@ const Navbar = ({ setShowLogin }) => {
   const toggleMobileMenu = () => setMobileMenuOpen(prev => !prev)
   const closeMobileMenu = () => setMobileMenuOpen(false)
 
+  // Helper function to go home + scroll to top
+  const goToHome = () => {
+    setMenu("home")
+    closeMobileMenu()
+    navigate('/')
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
   return (
     <div className="navbar" id="top">
-      <Link to="/" onClick={closeMobileMenu}>
+      {/* Logo - now also scrolls to top when already on home */}
+      <div onClick={goToHome} style={{ cursor: 'pointer' }}>
         <img src={assets.logo_hat} alt="Logo" className="logo" />
-      </Link>
+      </div>
 
+      {/* Desktop Menu */}
       <ul className="navbar-menu">
-        <Link to="/" onClick={() => setMenu("home")} className={menu === "home" ? "active" : ""}>
+        <Link 
+          to="/" 
+          onClick={() => {
+            setMenu("home")
+            window.scrollTo({ top: 0, behavior: 'smooth' })
+          }} 
+          className={menu === "home" ? "active" : ""}
+        >
           Home
         </Link>
+
         {window.location.pathname === "/" ? (
-          <a href="#explore-menu" onClick={() => setMenu("menu")} className={menu === "menu" ? "active" : ""}>
+          <a 
+            href="#explore-menu" 
+            onClick={() => setMenu("menu")} 
+            className={menu === "menu" ? "active" : ""}
+          >
             Menu
           </a>
         ) : (
-          <Link to="/#explore-menu" onClick={() => setMenu("menu")} className={menu === "menu" ? "active" : ""}>
+          <Link 
+            to="/#explore-menu" 
+            onClick={() => setMenu("menu")} 
+            className={menu === "menu" ? "active" : ""}
+          >
             Menu
           </Link>
         )}
-        <a href="#footer" onClick={() => setMenu("contact-us")} className={menu === "contact-us" ? "active" : ""}>
+
+        <a 
+          href="#footer" 
+          onClick={() => setMenu("contact-us")} 
+          className={menu === "contact-us" ? "active" : ""}
+        >
           Contact Us
         </a>
       </ul>
 
+      {/* Right side - cart + profile + mobile toggle */}
       <div className="navbar-right">
         <div className="navbar-search-icon">
           <Link to="/cart" onClick={closeMobileMenu}>
@@ -61,7 +93,10 @@ const Navbar = ({ setShowLogin }) => {
         </div>
 
         {!token ? (
-          <button className="navbar-signin-desktop" onClick={() => setShowLogin(true)}>
+          <button 
+            className="navbar-signin-desktop" 
+            onClick={() => setShowLogin(true)}
+          >
             Sign In
           </button>
         ) : (
@@ -90,17 +125,39 @@ const Navbar = ({ setShowLogin }) => {
         </div>
       </div>
 
+      {/* Mobile Menu */}
       <div className={`navbar-mobile-menu ${mobileMenuOpen ? "open" : ""}`}>
-        <Link to="/" onClick={() => { setMenu("home"); closeMobileMenu(); }}><TfiHome className='mob' />Home</Link>
+        <div className='for-mmenu-home' onClick={goToHome}>
+          <TfiHome className='mob' /> Home
+        </div>
+
         {window.location.pathname === "/" ? (
-          <a href="#explore-menu" onClick={() => { setMenu("menu"); closeMobileMenu(); }}><RiMenuAddLine className='mob' />Menu</a>
+          <a 
+            href="#explore-menu" 
+            onClick={() => { setMenu("menu"); closeMobileMenu(); }}
+          >
+            <RiMenuAddLine className='mob' /> Menu
+          </a>
         ) : (
-          <Link to="/#explore-menu" onClick={() => { setMenu("menu"); closeMobileMenu(); }}><RiMenuAddLine className='mob' />Menu</Link>
+          <Link 
+            to="/#explore-menu" 
+            onClick={() => { setMenu("menu"); closeMobileMenu(); }}
+          >
+            <RiMenuAddLine className='mob' /> Menu
+          </Link>
         )}
-        <a href="#footer" onClick={() => { setMenu("contact-us"); closeMobileMenu(); }}><GrContact className='mob' />Contact Us</a>
+
+        <a 
+          href="#footer" 
+          onClick={() => { setMenu("contact-us"); closeMobileMenu(); }}
+        >
+          <GrContact className='mob' /> Contact Us
+        </a>
 
         {!token ? (
-          <button onClick={() => { setShowLogin(true); closeMobileMenu(); }}>
+          <button 
+            onClick={() => { setShowLogin(true); closeMobileMenu(); }}
+          >
             Sign In
           </button>
         ) : (
@@ -108,10 +165,17 @@ const Navbar = ({ setShowLogin }) => {
             <div className="mobile-menu-email">
               Logged in as <strong>{userEmail}</strong>
             </div>
-            <Link to="/myorders" onClick={closeMobileMenu} className="mobile-menu-orders">
+            <Link 
+              to="/myorders" 
+              onClick={closeMobileMenu} 
+              className="mobile-menu-orders"
+            >
               <BsBagCheck className='mob' /> Orders
             </Link>
-            <div onClick={logout} className="mobile-menu-logout">
+            <div 
+              onClick={logout} 
+              className="mobile-menu-logout"
+            >
               <RiLogoutBoxRLine className='mob' /> Logout
             </div>
           </>

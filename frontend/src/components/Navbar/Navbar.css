@@ -226,7 +226,7 @@
 
 
 
-.navbar {
+/* .navbar {
   padding: 32px 0;
   display: flex;
   justify-content: space-between;
@@ -235,7 +235,75 @@
   margin: auto;
   position: relative;
   z-index: 1000;
+} */
+
+
+/* to make navbar fixed */
+
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  width: 100%;                    /* full viewport width */
+  max-width: 1440px;              /* never wider than this on huge screens */
+  margin: 0 auto;                 /* center it */
+  padding: 16px 10%;               /* symmetric padding – scales nicely */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #0c0a09;     
+  border-bottom: 1px solid rgba(40, 40, 40, 0.6); 
 }
+
+
+
+@media (max-width: 768px) {
+  .navbar {
+    padding: 12px 9%;           
+  }
+
+  .navbar .logo {
+    width: 110px–120px;         
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    padding: 10px 8.5%;      
+  }
+
+  .navbar-mobile-menu {
+    top: 58px;                 
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .navbar {
+    padding: 16px 10%;
+  }
+}
+
+
+@media (min-width: 1441px) {
+  .navbar {
+    padding: 18px 60px;       
+    /* or keep % → padding: 18px 5%; */
+  }
+}
+
+/* to make navbar fixed */
+
+
+
+
+
+
+
+
+
 
 .navbar .logo {
   width: 165px;
@@ -409,6 +477,7 @@
   visibility: hidden;
   transition: all 0.35s ease;
   z-index: 999;
+  color: #ff2600;
 }
 
 .navbar-mobile-menu.open {
@@ -431,6 +500,20 @@
   gap: 12px;
   cursor: pointer;
 }
+
+
+
+/* to make navbar fixed */
+.navbar-mobile-menu .for-mmenu-home {
+  display: flex;
+  gap: 12px;
+  font-size: 18px;
+  font-weight: 600;
+}
+/* to make navbar fixed */
+
+
+
 
 .navbar-mobile-menu button {
   background: #0a0a0a;
@@ -509,7 +592,7 @@
   .navbar-mobile-toggle { display: block; }
   .navbar-signin-desktop { display: none !important; } /* Hidden on mobile */
    .navbar-profile-desktop {display: none !important;}
-  .navbar { padding: 20px 0; width: 80%; }
+  /* .navbar { padding: 20px 0; width: 80%; } */
   .navbar .logo { width: 130px; }
   .navbar-mobile-menu { top: 78px; }
 }
@@ -564,7 +647,7 @@
 
 
 @media (max-width: 480px) {
-  .navbar { width: 80%; }
+  /* .navbar { width: 80%; } */
   .navbar-mobile-menu {
     top: 70px;
     padding: 20px;

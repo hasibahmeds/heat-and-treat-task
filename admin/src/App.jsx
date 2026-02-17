@@ -43,6 +43,8 @@ import List from "./pages/List/List";
 import Orders from "./pages/Orders/Orders";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Invoice from "./pages/Invoice/Invoice";
+
 
 import { url } from "./assets/assets";
 
@@ -134,6 +136,18 @@ const App = () => {
             </RequireAllowed>
           }
         />
+
+        <Route
+  path="/invoice"
+  element={
+    <RequireAllowed>
+      <AdminLayout>
+        <Invoice />
+      </AdminLayout>
+    </RequireAllowed>
+  }
+/>
+
 
         {/* Default */}
         <Route path="*" element={<Navigate to="/login" replace />} />

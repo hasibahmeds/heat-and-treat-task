@@ -215,6 +215,76 @@
   color: #b1adad;
 }
 
+
+
+
+
+
+
+
+
+
+.invoice-btn {
+  background-color: #ff2600;
+  border: none;
+  color: white;
+  padding: 10px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  width: 100%;
+  max-width: 120px;
+  transition: 0.3s;
+}
+
+.invoice-btn:hover {
+  background-color: #e91e00;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .invoice-btn {
+    max-width: 90px;
+    font-size: 11px;
+    padding: 7px 0;
+  }
+}
+
+/* Tablet */
+@media (min-width: 601px) and (max-width: 1024px) {
+  .invoice-btn {
+    max-width: 100px;
+    font-size: 12px;
+  }
+}
+
+/* Large */
+@media (min-width: 1025px) and (max-width: 1440px) {
+  .invoice-btn {
+    max-width: 120px;
+  }
+}
+
+/* XL */
+@media (min-width: 1441px) {
+  .invoice-btn {
+    max-width: 130px;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* ---------------------------------------------------
    RESPONSIVE DESIGN (sm, md, lg, xl)
 --------------------------------------------------- */

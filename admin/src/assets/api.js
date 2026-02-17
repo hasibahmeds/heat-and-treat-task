@@ -7,9 +7,7 @@ function buildUrl(base, path) {
   return `${base.replace(/\/$/, '')}${path.startsWith('/') ? path : '/' + path}`;
 }
 
-// Try the primary URL first; if the request fails with a network error (no response),
-// retry against the fallback URL. Throws the original error if both fail or the
-// server responds with an error status.
+
 export async function requestWithFallback(method, path, data = null, config = {}) {
   const tryRequest = async (base) => {
     const full = buildUrl(base, path);

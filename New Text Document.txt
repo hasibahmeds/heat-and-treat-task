@@ -1,3 +1,4 @@
+upolad in render for cse tech task
 frontend, backend + admin + admin log in-out-acc-cre suceesfully workred + all functions worked + responsive - 2025
 perfect last stays
 

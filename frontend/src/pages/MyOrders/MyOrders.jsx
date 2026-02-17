@@ -66,8 +66,14 @@ import "./MyOrders.css";
 import { StoreContext } from "../../context/StoreContext";
 import axios from "axios";
 import { BsBoxSeamFill } from "react-icons/bs";
+import { useNavigate } from "react-router-dom";
+
 
 const MyOrders = () => {
+
+  const navigate = useNavigate();
+
+
   const openEmail = (e) => {
     e.preventDefault();
     const email = "tastecode.1525@gmail.com";
@@ -128,6 +134,12 @@ const MyOrders = () => {
                 <b>{order.status}</b>
               </p>
               <button onClick={fetchOrders}>Track Order</button>
+              <button
+  className="invoice-btn"
+  onClick={() => navigate("/invoice", { state: { order } })}
+>
+  Invoice
+</button>
 
               {/* --- DROPDOWN CANCELLATION SECTION --- */}
               <details className="cancel-dropdown">
