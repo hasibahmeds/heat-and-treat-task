@@ -68,19 +68,27 @@ const Refund = () => {
   // Remove single refund
 const removeRefund = async (id) => {
   setLoadingId(id);
+
   try {
-    const res = await requestWithFallback("delete", `/api/refund/remove/${id}`);
+    const res = await requestWithFallback(
+      "delete",
+      `/api/refund/remove/${id}`
+    );
+
     if (res.data.success) {
       toast.success("Refund removed");
       fetchRefunds();
     } else {
       toast.error(res.data.message || "Failed to remove refund");
     }
-  } catch {
+  } catch (error) {
+    console.log(error);
     toast.error("Failed to remove refund");
   }
+
   setLoadingId(null);
 };
+
 
 
   useEffect(() => {
@@ -134,19 +142,19 @@ const removeRefund = async (id) => {
           </thead>
           <tbody>
             {refunds.map((r) => (
-              <tr key={r._id}>
+  <tr key={r._id}>
                 <td>{r.addedAmount || "-"}</td>
                 <td>{r.deletedAmount || "-"}</td>
                 <td>{r.addedAt ? new Date(r.addedAt).toLocaleString() : "-"}</td>
                 <td>{r.deletedAt ? new Date(r.deletedAt).toLocaleString() : "-"}</td>
                 <td>
-                  <button
-                    className="delete-btn"
-                    onClick={() => removeRefund(r._id)}
-                    disabled={loadingId === r._id}
-                  >
-                    {loadingId === r._id ? "Removing..." : "Remove"}
-                  </button>
+<button
+  onClick={() => removeRefund(r._id)}
+  disabled={loadingId === r._id}
+>
+  {loadingId === r._id ? "Removing..." : "Remove"}
+</button>
+
                 </td>
               </tr>
             ))}

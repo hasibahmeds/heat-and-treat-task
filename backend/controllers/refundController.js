@@ -12,6 +12,7 @@ const addRefundAmount = async (req, res) => {
 
     res.json({ success: true, data: refund });
   } catch (error) {
+    console.log(error);
     res.json({ success: false, message: "Error adding amount" });
   }
 };
@@ -28,6 +29,7 @@ const deleteRefundAmount = async (req, res) => {
 
     res.json({ success: true, data: refund });
   } catch (error) {
+    console.log(error);
     res.json({ success: false, message: "Error deleting amount" });
   }
 };
@@ -38,6 +40,7 @@ const getRefunds = async (req, res) => {
     const refunds = await refundModel.find({}).sort({ createdAt: -1 });
     res.json({ success: true, data: refunds });
   } catch (error) {
+    console.log(error);
     res.json({ success: false });
   }
 };
@@ -48,19 +51,26 @@ const clearRefunds = async (req, res) => {
     await refundModel.deleteMany({});
     res.json({ success: true });
   } catch (error) {
+    console.log(error);
     res.json({ success: false });
   }
 };
 
-// Remove single refund by ID
-const removeRefundById = async (req, res) => {
+// ✅ REMOVE SINGLE REFUND
+const removeRefund = async (req, res) => {
   try {
     const { id } = req.params;
-    const refund = await refundModel.findByIdAndDelete(id);
-    if (!refund) return res.json({ success: false, message: "Refund not found" });
+
+    const deleted = await refundModel.findByIdAndDelete(id);
+
+    if (!deleted) {
+      return res.json({ success: false, message: "Refund not found" });
+    }
+
     res.json({ success: true });
   } catch (error) {
-    res.json({ success: false, message: "Failed to remove refund" });
+    console.log(error);
+    res.json({ success: false, message: "Error removing refund" });
   }
 };
 
@@ -69,5 +79,5 @@ export {
   deleteRefundAmount,
   getRefunds,
   clearRefunds,
-  removeRefundById,
+  removeRefund
 };

@@ -4,7 +4,7 @@ import {
   deleteRefundAmount,
   getRefunds,
   clearRefunds,
-  removeRefundById
+  removeRefund
 } from "../controllers/refundController.js";
 
 const refundRouter = express.Router();
@@ -14,7 +14,7 @@ refundRouter.post("/delete", deleteRefundAmount);
 refundRouter.get("/list", getRefunds);
 refundRouter.delete("/clear", clearRefunds);
 
-// Remove single refund
-refundRouter.delete("/remove/:id", removeRefundById);
+// ✅ REMOVE SINGLE
+refundRouter.delete("/remove/:id", removeRefund);
 
 export default refundRouter;
