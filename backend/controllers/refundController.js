@@ -54,28 +54,4 @@ const clearRefunds = async (req, res) => {
 
 
 
-
-// Clear single refund by ID
-const clearSingleRefund = async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    await refundModel.findByIdAndDelete(id);
-
-    res.json({ success: true });
-  } catch (error) {
-    res.json({ success: false, message: "Error deleting refund" });
-  }
-};
-
-
-
-
-
-export { 
-  addRefundAmount, 
-  deleteRefundAmount, 
-  getRefunds, 
-  clearRefunds,
-  clearSingleRefund 
-};
+export { addRefundAmount, deleteRefundAmount, getRefunds, clearRefunds };

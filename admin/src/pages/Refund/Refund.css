@@ -35,37 +35,10 @@
   padding: 10px 16px;
   background: #ff2600;
   border: none;
-  border-radius: 4px;
   color: white;
   cursor: pointer;
   transition: 0.3s;
 }
-
-
-
-
-
-
-/* Shared button style for all actions */
-.refund-inputs button,
-.action-btn {
-  padding: 10px 16px;
-  background: #ff2600;
-  border-radius: 4px;
-  border: none;
-  color: white;
-  cursor: pointer;
-  transition: 0.3s;
-  font-size: 14px;
-}
-
-.refund-inputs button:disabled,
-.action-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-
 
 .refund-inputs button:disabled {
   opacity: 0.6;
