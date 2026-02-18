@@ -9,13 +9,15 @@ import { FaEye, FaEyeSlash } from "react-icons/fa"; // Import icons
 const Signup = () => {
   const navigate = useNavigate();
   const [data, setData] = useState({ name: "", email: "", password: "" });
-  const [showPassword, setShowPassword] = useState(false); // State for visibility
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false); // 🔥 Loading state
 
   const onChange = (e) =>
     setData((d) => ({ ...d, [e.target.name]: e.target.value }));
 
   const onSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); // 🔥 Start loading
     try {
       const cred = await createUserWithEmailAndPassword(
         auth,
@@ -28,6 +30,8 @@ const Signup = () => {
       navigate("/add");
     } catch (error) {
       alert(error.message);
+    } finally {
+      setLoading(false); // 🔥 Stop loading
     }
   };
 
@@ -48,6 +52,7 @@ const Signup = () => {
               type="text"
               placeholder="Your name"
               required
+              disabled={loading}
             />
             <input
               name="email"
@@ -56,18 +61,21 @@ const Signup = () => {
               type="email"
               placeholder="Your email"
               required
+              disabled={loading}
             />
+
             {/* Password Wrapper */}
             <div className="password-input-wrapper">
               <input
                 name="password"
                 onChange={onChange}
                 value={data.password}
-                type={showPassword ? "text" : "password"} // Toggle type
+                type={showPassword ? "text" : "password"}
                 placeholder="Password"
                 required
+                disabled={loading}
               />
-              <span 
+              <span
                 className="password-toggle-icon"
                 onClick={() => setShowPassword(!showPassword)}
               >
@@ -76,10 +84,12 @@ const Signup = () => {
             </div>
           </div>
 
-          <button type="submit">Create account</button>
+          <button type="submit" disabled={loading}>
+            {loading ? "Processing..." : "Create account"}
+          </button>
 
           <div className="login-popup-condition">
-            <input type="checkbox" required />
+            <input type="checkbox" required disabled={loading} />
             <p>By continuing, I agree to the terms of use & privacy policy.</p>
           </div>
 

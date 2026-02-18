@@ -111,7 +111,7 @@ const LoginPopup = ({ setShowLogin }) => {
         {/* 🔥 UPDATED BUTTON WITH LOADING */}
         <button type='submit' disabled={loading}>
           {loading
-            ? "Loading..."
+            ? "Processing..."
             : currState === "Sign Up"
               ? "Create account"
               : "Login"}
