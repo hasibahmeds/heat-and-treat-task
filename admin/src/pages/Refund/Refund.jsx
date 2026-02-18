@@ -66,19 +66,22 @@ const Refund = () => {
   };
 
   // Remove single refund
-  const removeRefund = async (id) => {
-    setLoadingId(id);
-    try {
-      const res = await requestWithFallback("delete", `/api/refund/clear/${id}`);
-      if (res.data.success) {
-        toast.success("Refund removed");
-        fetchRefunds();
-      }
-    } catch {
-      toast.error("Failed to remove refund");
+const removeRefund = async (id) => {
+  setLoadingId(id);
+  try {
+    const res = await requestWithFallback("delete", `/api/refund/remove/${id}`);
+    if (res.data.success) {
+      toast.success("Refund removed");
+      fetchRefunds();
+    } else {
+      toast.error(res.data.message || "Failed to remove refund");
     }
-    setLoadingId(null);
-  };
+  } catch {
+    toast.error("Failed to remove refund");
+  }
+  setLoadingId(null);
+};
+
 
   useEffect(() => {
     fetchRefunds();

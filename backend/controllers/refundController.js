@@ -7,7 +7,7 @@ const addRefundAmount = async (req, res) => {
 
     const refund = await refundModel.create({
       addedAmount: amount,
-      addedAt: new Date()
+      addedAt: new Date(),
     });
 
     res.json({ success: true, data: refund });
@@ -23,7 +23,7 @@ const deleteRefundAmount = async (req, res) => {
 
     const refund = await refundModel.create({
       deletedAmount: amount,
-      deletedAt: new Date()
+      deletedAt: new Date(),
     });
 
     res.json({ success: true, data: refund });
@@ -42,7 +42,7 @@ const getRefunds = async (req, res) => {
   }
 };
 
-// Clear all
+// Clear all refunds
 const clearRefunds = async (req, res) => {
   try {
     await refundModel.deleteMany({});
@@ -52,6 +52,22 @@ const clearRefunds = async (req, res) => {
   }
 };
 
+// Remove single refund by ID
+const removeRefundById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const refund = await refundModel.findByIdAndDelete(id);
+    if (!refund) return res.json({ success: false, message: "Refund not found" });
+    res.json({ success: true });
+  } catch (error) {
+    res.json({ success: false, message: "Failed to remove refund" });
+  }
+};
 
-
-export { addRefundAmount, deleteRefundAmount, getRefunds, clearRefunds };
+export {
+  addRefundAmount,
+  deleteRefundAmount,
+  getRefunds,
+  clearRefunds,
+  removeRefundById,
+};
