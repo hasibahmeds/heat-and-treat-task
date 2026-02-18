@@ -12,7 +12,16 @@ refundRouter.post("/add", addRefundAmount);
 refundRouter.post("/delete", deleteRefundAmount);
 refundRouter.get("/list", getRefunds);
 refundRouter.delete("/clear", clearRefunds);
-refundRouter.delete("/clear/:id", clearSingleRefund);
 
+// DELETE single refund
+refundRouter.delete("/clear/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    await refundModel.findByIdAndDelete(id);
+    res.json({ success: true });
+  } catch {
+    res.json({ success: false });
+  }
+});
 
 export default refundRouter;
