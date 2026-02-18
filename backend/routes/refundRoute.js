@@ -12,5 +12,7 @@ refundRouter.post("/add", addRefundAmount);
 refundRouter.post("/delete", deleteRefundAmount);
 refundRouter.get("/list", getRefunds);
 refundRouter.delete("/clear", clearRefunds);
+refundRouter.delete("/clear/:id", clearSingleRefund);
+
 
 export default refundRouter;

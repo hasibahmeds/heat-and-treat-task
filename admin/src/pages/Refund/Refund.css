@@ -1,7 +1,12 @@
-.refund {
-  width: 70%;
-  margin: 60px;
+.refund-container {
+  width: 95%;
+  max-width: 1200px;
+  margin: 40px auto;
   color: #cecccc;
+}
+
+.refund-container h3 {
+  margin-bottom: 20px;
 }
 
 .refund-inputs {
@@ -9,25 +14,76 @@
   gap: 20px;
   margin-bottom: 25px;
   flex-wrap: wrap;
+  align-items: center;
+}
+
+.input-group {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .refund-inputs input {
-  padding: 8px;
+  padding: 10px;
   background: #000;
   border: 1px solid #444;
   color: white;
+  min-width: 150px;
 }
 
 .refund-inputs button {
-  padding: 8px 14px;
+  padding: 10px 16px;
   background: #ff2600;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+
+
+
+
+
+/* Shared button style for all actions */
+.refund-inputs button,
+.action-btn {
+  padding: 10px 16px;
+  background: #ff2600;
+  border-radius: 4px;
   border: none;
   color: white;
   cursor: pointer;
+  transition: 0.3s;
+  font-size: 14px;
+}
+
+.refund-inputs button:disabled,
+.action-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+
+
+.refund-inputs button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .clear-btn {
   background: #f44336;
+}
+
+.delete-btn {
+  background: #b71c1c;
+  padding: 6px 12px;
+  font-size: 13px;
+}
+
+.table-wrapper {
+  overflow-x: auto;
 }
 
 .refund-table {
@@ -35,6 +91,7 @@
   border-collapse: collapse;
   background: black;
   border: 1px solid #444;
+  min-width: 800px;
 }
 
 .refund-table th,
@@ -42,4 +99,34 @@
   border: 1px solid #444;
   padding: 10px;
   text-align: center;
+  font-size: 14px;
+}
+
+/* 📱 Small Devices */
+@media (max-width: 768px) {
+  .refund-inputs {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .input-group {
+    width: 100%;
+  }
+
+  .refund-inputs input {
+    width: 100%;
+  }
+
+  .refund-inputs button {
+    width: 100%;
+  }
+}
+
+/* 📱 Extra Small */
+@media (max-width: 480px) {
+  .refund-table th,
+  .refund-table td {
+    font-size: 12px;
+    padding: 6px;
+  }
 }
