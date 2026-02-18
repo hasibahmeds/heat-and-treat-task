@@ -151,6 +151,7 @@ const removeRefund = async (id) => {
 <button
   onClick={() => removeRefund(r._id)}
   disabled={loadingId === r._id}
+  className="remove-btn"  
 >
   {loadingId === r._id ? "Removing..." : "Remove"}
 </button>
