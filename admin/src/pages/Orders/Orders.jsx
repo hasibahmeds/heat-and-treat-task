@@ -192,9 +192,20 @@ const Orders = ({ url }) => {
     }
   }
 
-  useEffect(() => {
+useEffect(() => {
+  // First load
+  fetchAllOrders();
+
+  // 🔥 Auto refresh every 5 seconds
+  const interval = setInterval(() => {
     fetchAllOrders();
-  }, [])
+  }, 5000);
+
+  // Cleanup when component unmounts
+  return () => clearInterval(interval);
+
+}, []);
+
 
   // --- FILTERED ORDERS LOGIC ---
   const filteredOrders = orders.filter(order => 
@@ -249,18 +260,21 @@ const Orders = ({ url }) => {
               <div className='order-item-action'>
                 <select onChange={(event) => statusHandler(event, order._id)} value={order.status}>
                   <option value="Food Processing">Food Processing</option>
+                  <option value="Food Processed">Food Processed</option>
                   <option value="Out for delivery">Out for delivery</option>
                   <option value="Delivered">Delivered</option>
                   <option value="Cancelled">Cancelled</option>
                 </select>
-                                <button
-  className="invoice-btn"
-  onClick={() => navigate("/invoice", { state: { order } })}
->
-  Invoice
-</button>
-                <button onClick={() => deleteOrder(order._id)} className='delete-order-btn'>X</button>
 
+                <button
+                  className="invoice-btn"
+                  disabled={order.status !== "Out for delivery" && order.status !== "Delivered"}
+                  onClick={() => navigate("/invoice", { state: { order } })}
+                >
+                  Invoice
+                </button>
+
+                <button onClick={() => deleteOrder(order._id)} className='delete-order-btn'>X</button>
               </div>
             </div>
           ))

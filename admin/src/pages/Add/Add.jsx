@@ -251,6 +251,8 @@ const Add = ({ url }) => {
   const [imageUrl, setImageUrl] = useState("");
   const [imageType, setImageType] = useState("file"); // 'file' or 'url'
 
+  const [isSubmitting, setIsSubmitting] = useState(false); // ✅ NEW STATE
+
   const [data, setData] = useState({
     name: "",
     description: "",
@@ -266,6 +268,11 @@ const Add = ({ url }) => {
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
+
+    if (isSubmitting) return; // ✅ Prevent double click
+
+    setIsSubmitting(true); // ✅ Disable button immediately
+
     const formData = new FormData();
     formData.append("name", data.name);
     formData.append("description", data.description);
@@ -279,21 +286,28 @@ const Add = ({ url }) => {
       formData.append("imageUrl", imageUrl);
     }
 
-    const response = await requestWithFallback('post', '/api/food/add', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    });
-    if (response.data.success) {
-      setData({
-        name: "",
-        description: "",
-        price: "",
-        category: "Deep Fried",
+    try {
+      const response = await requestWithFallback('post', '/api/food/add', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
       });
-      setImage(false);
-      setImageUrl("");
-      toast.success(response.data.message);
-    } else {
-      toast.error(response.data.message);
+
+      if (response.data.success) {
+        setData({
+          name: "",
+          description: "",
+          price: "",
+          category: "Deep Fried",
+        });
+        setImage(false);
+        setImageUrl("");
+        toast.success(response.data.message);
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      toast.error("Something went wrong");
+    } finally {
+      setIsSubmitting(false); // ✅ Re-enable button after request finishes
     }
   };
 
@@ -332,7 +346,6 @@ const Add = ({ url }) => {
               value={imageUrl}
               onChange={(e)=>setImageUrl(e.target.value)}
               required={imageType === "url"}
-              // style={{padding: '10px', background: 'rgb(61, 61, 61)', color: 'white', borderRadius: '6px', border: 'none', width: 'max(40%, 200px)'}}
             />
           )}
         </div>
@@ -349,6 +362,7 @@ const Add = ({ url }) => {
             style={{ resize: "vertical", minHeight: "40px", overflowY: "auto" }}
           />
         </div>
+
         <div className="add-product-description flex-col">
           <p>Product description</p>
           <textarea
@@ -361,6 +375,7 @@ const Add = ({ url }) => {
             style={{ resize: "vertical", minHeight: "90px", overflowY: "auto" }}
           />
         </div>
+
         <div className="add-category-price">
           <div className="add-category flex-col">
             <p>Product category</p>
@@ -374,6 +389,7 @@ const Add = ({ url }) => {
               <option value="Coffee">Coffee</option>
             </select>
           </div>
+
           <div className="add-price flex-col">
             <p>Product price</p>
             <input
@@ -385,8 +401,15 @@ const Add = ({ url }) => {
             />
           </div>
         </div>
-        <button type="submit" className="add-btn">
-          ADD
+
+        {/* ✅ Button now disabled while submitting */}
+        <button 
+          type="submit" 
+          className="add-btn"
+          disabled={isSubmitting}
+          style={{ opacity: isSubmitting ? 0.6 : 1, cursor: isSubmitting ? "not-allowed" : "pointer" }}
+        >
+          {isSubmitting ? "Adding..." : "ADD"}
         </button>
       </form>
     </div>

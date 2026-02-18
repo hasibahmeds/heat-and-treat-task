@@ -111,6 +111,9 @@
   background-color: rgba(0, 0, 0, 0.5);
   display: grid;
   place-items: center;
+  /* newly add */
+  padding-top: 42px;
+    /* newly add */
   backdrop-filter: blur(4px);
 }
 

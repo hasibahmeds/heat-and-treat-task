@@ -1,3 +1,18 @@
+/* .sidebar{
+    width: 15%;
+    min-height: 100vh;
+    border: 2px solid #242323;
+    border-left: 0;
+    border-top: 0;
+    border-bottom: 0;
+    font-size: max(1vw,10px);
+} */
+
+
+
+
+
+
 .sidebar{
     width: 15%;
     min-height: 100vh;
@@ -6,7 +21,21 @@
     border-top: 0;
     border-bottom: 0;
     font-size: max(1vw,10px);
+
+    position: fixed;      /* ✅ Fix position */
+    top: 0;               /* ✅ Stick to top */
+    left: 0;              /* ✅ Stick to left */
+    background-color: black; /* ✅ Prevent content overlap */
 }
+
+
+
+
+
+
+
+
+
 
 .sidebar-options{
     /* padding-top: 35px;

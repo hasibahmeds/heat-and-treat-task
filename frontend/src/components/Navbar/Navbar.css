@@ -248,7 +248,8 @@
   right: 0;
   z-index: 1000;
   width: 100%;                    /* full viewport width */
-  max-width: 1440px;              /* never wider than this on huge screens */
+  /* max-width: 1440px;  */
+  max-width: 100%; 
   margin: 0 auto;                 /* center it */
   padding: 16px 10%;               /* symmetric padding – scales nicely */
   display: flex;

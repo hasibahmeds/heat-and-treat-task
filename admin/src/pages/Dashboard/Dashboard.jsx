@@ -74,7 +74,7 @@ useEffect(() => {
 </div>
 
 {/* -------- DAILY ORDERS CHART -------- */}
-<div className="dashboard-chart">
+{/* <div className="dashboard-chart">
   <h4>Daily Orders</h4>
   <ResponsiveContainer width="100%" height={260}>
     <BarChart data={chartData}>
@@ -84,7 +84,22 @@ useEffect(() => {
       <Bar dataKey="totalOrders" />
     </BarChart>
   </ResponsiveContainer>
+</div> */}
+
+
+<div className="dashboard-chart">
+  <h4>Daily Orders</h4>
+  <ResponsiveContainer width="100%" height={260}>
+    <LineChart data={chartData}>
+      <XAxis dataKey="_id" />
+      <YAxis />
+      <Tooltip />
+      <Line dataKey="totalOrders" />
+    </LineChart>
+  </ResponsiveContainer>
 </div>
+
+
     </div>
   );
 };

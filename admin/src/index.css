@@ -28,6 +28,14 @@ hr{
   display: flex;
 }
 
+
+/* for fixed the siebar */
+.main-content{
+    margin-left: 15%;
+    width: 85%;
+}
+/* for fixed the siebar */
+
 .flex-col{
   display: flex;
   flex-direction: column;

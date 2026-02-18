@@ -60,7 +60,6 @@
 
 
 
-
 import { useContext, useEffect, useState } from "react";
 import "./MyOrders.css";
 import { StoreContext } from "../../context/StoreContext";
@@ -68,11 +67,9 @@ import axios from "axios";
 import { BsBoxSeamFill } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 
-
 const MyOrders = () => {
 
   const navigate = useNavigate();
-
 
   const openEmail = (e) => {
     e.preventDefault();
@@ -91,16 +88,38 @@ const MyOrders = () => {
       );
     }
   };
+
   const { url, token } = useContext(StoreContext);
   const [data, setData] = useState([]);
 
-  const fetchOrders = async () => {
+  // 🔥 NEW: Loading states
+  const [loadingTrack, setLoadingTrack] = useState(null);
+  const [loadingCancel, setLoadingCancel] = useState(null);
+
+  const fetchOrders = async (orderId = null) => {
+    if (orderId) setLoadingTrack(orderId);
+
     const response = await axios.post(
       url + "/api/order/userorders",
       {},
       { headers: { token } }
     );
+
     setData(response.data.data);
+    setLoadingTrack(null);
+  };
+
+  // 🔥 Direct Cancel Status Update with Loading
+  const statusHandler = async (orderId) => {
+    setLoadingCancel(orderId);
+
+    await axios.post(url + "/api/order/status", {
+      orderId,
+      status: "Cancelled",
+    });
+
+    await fetchOrders();
+    setLoadingCancel(null);
   };
 
   useEffect(() => {
@@ -114,6 +133,11 @@ const MyOrders = () => {
       <h2>My Orders</h2>
       <div className="container">
         {data.map((order, index) => {
+
+          const canAccessInvoice =
+            order.status === "Out for delivery" ||
+            order.status === "Delivered";
+
           return (
             <div key={index} className="my-orders-order">
               <BsBoxSeamFill className="box" />
@@ -133,28 +157,47 @@ const MyOrders = () => {
                 <span>&#x25cf;</span>
                 <b>{order.status}</b>
               </p>
-              <button onClick={fetchOrders}>Track Order</button>
+
+              {/* 🔥 Track Order Button with Loading */}
               <button
-  className="invoice-btn"
-  onClick={() => navigate("/invoice", { state: { order } })}
->
-  Invoice
-</button>
+                onClick={() => fetchOrders(order._id)}
+                disabled={loadingTrack === order._id}
+              >
+                {loadingTrack === order._id ? "Tracking..." : "Track Order"}
+              </button>
+
+              {/* 🔥 Invoice Accessible Only After Delivery */}
+              <button
+                className="invoice-btn"
+                disabled={!canAccessInvoice}
+                style={!canAccessInvoice ? { opacity: 0.5, cursor: "not-allowed" } : {}}
+                onClick={() => canAccessInvoice && navigate("/invoice", { state: { order } })}
+              >
+                Invoice
+              </button>
 
               {/* --- DROPDOWN CANCELLATION SECTION --- */}
-              <details className="cancel-dropdown">
-                <summary>Cancel this order?</summary>
-                <div className="cancel-content">
-                  <p className="hint">
-                    Please copy from the below & send this at the{" "}
-                    <a className="mail" href="#" onClick={openEmail}>
-                      Gmail
-                    </a>
-                  </p>
-                  {/* <p className="order-id-display"> <span className='can'>{order._id} (cancel)</span></p> */}
-                  <p className="can">{order._id} (cancel)</p>
-                </div>
-              </details>
+              {order.status === "Food Processing" && (
+                <details className="cancel-dropdown">
+                  <summary>Cancel this order?</summary>
+                  <div className="cancel-content">
+                    <p className="hint">
+                      Cancel option will be disabled within 15 minutes.
+                    </p>
+
+                    {/* 🔥 Confirm Cancel Button with Loading */}
+                    <button
+                      className="confirm-cancel-btn"
+                      onClick={() => statusHandler(order._id)}
+                      disabled={loadingCancel === order._id}
+                    >
+                      {loadingCancel === order._id ? "Cancelling..." : "Confirm Cancel"}
+                    </button>
+
+                  </div>
+                </details>
+              )}
+
             </div>
           );
         })}
@@ -164,3 +207,6 @@ const MyOrders = () => {
 };
 
 export default MyOrders;
+
+
+

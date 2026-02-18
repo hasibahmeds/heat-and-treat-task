@@ -156,6 +156,26 @@
 
 
 
+/* Search Input */
+.search-input {
+  width: 100%;
+  padding: 10px 12px;
+  margin-bottom: 15px;
+  border-radius: 4px;
+  border: 1px solid #ff2600;
+  background: #1a1a1a;
+  color: white;
+  font-size: 14px;
+  outline: none;
+}
+
+.search-input::placeholder {
+  color: #aaa;
+}
+
+.search-input:focus {
+  border-color: #ff2600;
+}
 
 
 

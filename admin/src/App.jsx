@@ -34,6 +34,14 @@
 export default App */
 }
 
+
+
+
+
+
+
+
+
 // src/App.jsx
 import Sidebar from "./components/Sidebar/Sidebar";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
@@ -55,16 +63,41 @@ import Login from "./pages/Auth/Login";
 import Signup from "./pages/Auth/Signup";
 import Logout from "./pages/Auth/Logout";
 
+// const AdminLayout = ({ children }) => {
+//   const { user } = useAuth();
+//   const isAllowed = !!user && ALLOWED_EMAILS.includes(user.email || "");
+//   return (
+//     <div className="app-content">
+//       {isAllowed ? <Sidebar /> : null}
+//       {children}
+//     </div>
+//   );
+// };
+
+
+
+
+
+// for fixed the siebar
+
 const AdminLayout = ({ children }) => {
   const { user } = useAuth();
   const isAllowed = !!user && ALLOWED_EMAILS.includes(user.email || "");
+
   return (
     <div className="app-content">
       {isAllowed ? <Sidebar /> : null}
-      {children}
+      <div className="main-content">
+        {children}
+      </div>
     </div>
   );
 };
+
+// for fixed the siebar
+
+
+
 
 const RequireAllowed = ({ children }) => {
   const { user, loading } = useAuth();

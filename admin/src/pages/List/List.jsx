@@ -301,7 +301,6 @@ import { toast } from 'react-toastify';
 import { url } from '../../assets/assets';
 import { requestWithFallback } from '../../assets/api';
 
-
 // const List = ({ url = 'http://localhost:4000' }) => {
 const List = ({ url = 'https://heat-and-treat-task-backend.onrender.com' }) => {
   const [list, setList] = useState([]);
@@ -315,6 +314,9 @@ const List = ({ url = 'https://heat-and-treat-task-backend.onrender.com' }) => {
     imageUrl: '',
   });
   const [imageFile, setImageFile] = useState(null);
+
+  // --- New state for search input ---
+  const [searchQuery, setSearchQuery] = useState('');
 
   const fetchList = async () => {
     try {
@@ -332,23 +334,7 @@ const List = ({ url = 'https://heat-and-treat-task-backend.onrender.com' }) => {
     }
   };
 
-  // const removeFood = async (foodId) => {
-  //   try {
-  //     const response = await axios.post(`${url}/api/food/remove`, { id: foodId });
-  //     if (response.data && response.data.success) {
-  //       toast.success(response.data.message || 'Item removed');
-  //       await fetchList();
-  //     } else {
-  //       toast.error(response.data?.message || 'Error removing item');
-  //     }
-  //   } catch (err) {
-  //     toast.error(err?.response?.data?.message || 'Network error while removing item');
-  //   }
-  // };
-
-
-const removeFood = async (foodId) => {
-    // Added confirmation alert
+  const removeFood = async (foodId) => {
     if (window.confirm("Are you sure you want to remove this item?")) {
       try {
         const response = await requestWithFallback('post', '/api/food/remove', { id: foodId });
@@ -363,7 +349,6 @@ const removeFood = async (foodId) => {
       }
     }
   };
-
 
   const startEdit = (item) => {
     setEditItem(item._id);
@@ -419,11 +404,25 @@ const removeFood = async (foodId) => {
     fetchList();
   }, []);
 
+  // --- Filter list by search query ---
+  const filteredList = list.filter(item =>
+    item.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="list add flex-col">
       <div className="list-table">
         <p className='Para'>All Foods List</p>
-        
+
+        {/* --- Search Input --- */}
+        <input
+          type="text"
+          placeholder="Search Food..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="search-input"
+        />
+
         <div className="list-table-format title">
           <b>#</b>
           <b>Image</b>
@@ -434,10 +433,10 @@ const removeFood = async (foodId) => {
         </div>
 
         {loading && <div className="list-loading">Loading...</div>}
-        {!loading && list.length === 0 && <div className="list-empty">No items found</div>}
+        {!loading && filteredList.length === 0 && <div className="list-empty">No items found</div>}
 
         {!loading &&
-          list.map((item, index) => (
+          filteredList.map((item, index) => (
             <div key={item._id} className="list-table-format">
               <p className="cell-index">{index + 1}</p>
 
@@ -455,8 +454,7 @@ const removeFood = async (foodId) => {
                     placeholder="Name"
                     rows="1"
                   />
-                  
-                  {/* Category Dropdown */}
+
                   <select 
                     value={formData.category} 
                     onChange={(e) => setFormData({ ...formData, category: e.target.value })}
@@ -489,10 +487,7 @@ const removeFood = async (foodId) => {
                   <p className="cell-category">{item.category}</p>
                   <p className="cell-price">{item.price} TK</p>
                   <div className="cell-action">
-                    <button onClick={() => startEdit(item)} className="edit-btn" title="Edit">
-                      ✎
-                      {/* ✒️ */}
-                    </button>
+                    <button onClick={() => startEdit(item)} className="edit-btn" title="Edit">✎</button>
                     <button
                       onClick={() => removeFood(item._id)}
                       className="cell-action cursor delete-btn"

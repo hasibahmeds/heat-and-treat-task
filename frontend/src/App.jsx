@@ -5,14 +5,28 @@ import Cart from "./pages/Cart/Cart";
 import PlaceOrder from "./pages/PlaceOrder/PlaceOrder";
 import Footer from "./components/Footer/Footer";
 import LoginPopup from "./components/LoginPopup/LoginPopup";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MyOrders from "./pages/MyOrders/MyOrders";
 import Invoice from "./pages/Invoice/Invoice";
 
+// 🔥 Toast imports
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const App = () => {
 
   const [showLogin,setShowLogin] = useState(false)
+
+  // 🔥 NEW: Listen for checkout login trigger
+  useEffect(() => {
+    const openLogin = () => setShowLogin(true);
+    window.addEventListener("openLogin", openLogin);
+
+    return () => {
+      window.removeEventListener("openLogin", openLogin);
+    };
+  }, []);
+
   return (
     <>
     {showLogin?<LoginPopup setShowLogin={setShowLogin}/>:<></>}
@@ -24,10 +38,12 @@ const App = () => {
           <Route path="/order" element={<PlaceOrder />} />
           <Route path="/myorders" element={<MyOrders />} />
           <Route path="/invoice" element={<Invoice />} />
-
         </Routes>
       </div>
       <Footer />
+
+      {/* 🔥 Toast Container */}
+      <ToastContainer position="top-right" autoClose={2000} />
     </>
   );
 };

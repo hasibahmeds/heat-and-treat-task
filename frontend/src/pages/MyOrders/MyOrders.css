@@ -188,7 +188,7 @@
   padding: 12px 0;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 18px;
 }
 
 .cancel-content .hint {
@@ -203,11 +203,10 @@
   cursor: pointer;
 }
 
-
 .cancel-content .mail{
-    color: #b4b2b2;
-    text-decoration: underline;
-    font-size: 13px;
+  color: #b4b2b2;
+  text-decoration: underline;
+  font-size: 13px;
 }
 
 .cancel-content .order-id-display {
@@ -215,14 +214,28 @@
   color: #b1adad;
 }
 
+/* Confirm Cancel Button - Same Responsive Behavior as Invoice */
+.confirm-cancel-btn {
+  background-color: #ff2600;
+  border: none;
+  color: white;
+  padding: 10px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  width: 100%;
+  max-width: 120px;
+  margin: 0 auto;
+  transition: 0.3s;
+}
 
+.confirm-cancel-btn:hover {
+  background-color: #e91e00;
+}
 
-
-
-
-
-
-
+/* --------------------------------------------------- */
+/* Invoice Button Styling */
+/* --------------------------------------------------- */
 
 .invoice-btn {
   background-color: #ff2600;
@@ -248,11 +261,22 @@
     font-size: 11px;
     padding: 7px 0;
   }
+
+  .confirm-cancel-btn {
+    max-width: 90px;
+    font-size: 11px;
+    padding: 7px 0;
+  }
 }
 
 /* Tablet */
 @media (min-width: 601px) and (max-width: 1024px) {
   .invoice-btn {
+    max-width: 100px;
+    font-size: 12px;
+  }
+
+  .confirm-cancel-btn {
     max-width: 100px;
     font-size: 12px;
   }
@@ -263,6 +287,10 @@
   .invoice-btn {
     max-width: 120px;
   }
+
+  .confirm-cancel-btn {
+    max-width: 120px;
+  }
 }
 
 /* XL */
@@ -270,20 +298,11 @@
   .invoice-btn {
     max-width: 130px;
   }
+
+  .confirm-cancel-btn {
+    max-width: 130px;
+  }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* ---------------------------------------------------
    RESPONSIVE DESIGN (sm, md, lg, xl)
@@ -294,16 +313,19 @@
   .my-orders {
     width: 80%; 
   }
+
   .my-orders-order {
     grid-template-columns: 1fr 1fr; 
     gap: 15px;
     padding: 15px;
   }
+
   .my-orders-order button {
-    max-width: 90px; /* Keeps it small on mobile */
+    max-width: 90px;
     font-size: 10px;
     padding: 7px 0;
   }
+
   .cancel-dropdown summary {
     font-size: 12px;
   }
@@ -315,6 +337,7 @@
     grid-template-columns: 0.5fr 2fr 1fr 1fr;
     gap: 20px;
   }
+
   .my-orders-order button {
     max-width: 100px;
     font-size: 11px;
@@ -326,6 +349,7 @@
   .my-orders {
     width: 80%;
   }
+
   .my-orders-order button {
     max-width: 120px;
   }
@@ -336,6 +360,7 @@
   .my-orders {
     max-width: 1200px;
   }
+
   .my-orders-order button {
     max-width: 130px;
   }
@@ -348,6 +373,7 @@
     row-gap: 5px;
     font-size: 12px;
   }
+
   /* This specific override ensures the small font stays small */
   .my-orders-order button {
     font-size: 10px;

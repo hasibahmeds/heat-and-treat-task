@@ -1,6 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
 
-*{
+* {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
@@ -8,89 +8,68 @@
   scroll-behavior: smooth;
 }
 
-body{
+body {
   min-height: 100vh;
   background-color: #0c0a09;
 }
 
-
-
-
-
-
-
-
-
-
-
 /* to make navbar fixed */
 
-body > div:first-child,         
+body > div:first-child,
 .app,
 .hero,
 .explore-menu,
 .food-display {
-  padding-top: 50px;         
+  padding-top: 50px;
 }
 
 /* .hero {
   padding-top: 130px;            
 } */
 
-
 @media (max-width: 768px) {
-body > div:first-child,         
-.app,
-.hero,
-.explore-menu,
-.food-display {
-  padding-top: 40px;            
-}
+  body > div:first-child,
+  .app,
+  .hero,
+  .explore-menu,
+  .food-display {
+    padding-top: 40px;
+  }
 }
 
 @media (max-width: 480px) {
-body > div:first-child,          
-.app,
-.hero,
-.explore-menu,
-.food-display {
-  padding-top: 40px;         
+  body > div:first-child,
+  .app,
+  .hero,
+  .explore-menu,
+  .food-display {
+    padding-top: 40px;
+  }
 }
-}
-
 
 @media (min-width: 769px) and (max-width: 1024px) {
-body > div:first-child,          
-.app,
-.hero,
-.explore-menu,
-.food-display {
-  padding-top: 40px;           
+  body > div:first-child,
+  .app,
+  .hero,
+  .explore-menu,
+  .food-display {
+    padding-top: 40px;
+  }
 }
-}
-
 
 @media (min-width: 1441px) {
-body > div:first-child,        
-.app,
-.hero,
-.explore-menu,
-.food-display {
-  padding-top: 40px;           
-}
+  body > div:first-child,
+  .app,
+  .hero,
+  .explore-menu,
+  .food-display {
+    padding-top: 40px;
+  }
 }
 
 /* to make navbar fixed */
 
-
-
-
-
-
-
-
-
-a{
+a {
   text-decoration: none;
   color: inherit;
 }
@@ -101,10 +80,10 @@ a{
 } */
 
 @keyframes fadeIn {
-  0%{
+  0% {
     opacity: 0;
   }
-  100%{
+  100% {
     opacity: 1;
   }
 }
