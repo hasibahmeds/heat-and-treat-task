@@ -43,6 +43,10 @@ import { BiBox } from "react-icons/bi";
 import { GiShop } from "react-icons/gi";
 import { MdDashboard } from "react-icons/md";
 
+
+import { MdOutlinePayments } from "react-icons/md";
+
+
 // import { MdOutlinePointOfSale } from "react-icons/md";
 
 const Sidebar = () => {
@@ -53,6 +57,18 @@ const Sidebar = () => {
           <MdDashboard className="box" />
           <p>Dashboard</p>
         </NavLink>
+
+
+
+
+        <NavLink to="/refund" className="sidebar-option">
+  <MdOutlinePayments className="box" />
+  <p>Refund</p>
+</NavLink>
+
+
+
+
 
         <NavLink to="/add" className="sidebar-option">
           <LiaPlusCircleSolid className="plus" />

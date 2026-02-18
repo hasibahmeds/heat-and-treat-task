@@ -1,8 +1,10 @@
 import orderModel from "../models/orderModel.js";
+import refundModel from "../models/refundModel.js"; // ✅ NEW IMPORT
 
 const getDashboardStats = async (req, res) => {
   try {
     const orders = await orderModel.find({});
+    const refunds = await refundModel.find({}); // ✅ GET REFUND DATA
 
     let totalItemsSold = 0;
     let totalRevenue = 0;
@@ -10,19 +12,35 @@ const getDashboardStats = async (req, res) => {
     let cancelledCount = 0;
     let pendingCount = 0;
 
+    // ===============================
+    // ORDER CALCULATIONS (UNCHANGED)
+    // ===============================
     orders.forEach(order => {
-      // total money
+
+      // Total revenue from orders
       totalRevenue += order.amount;
 
-      // total items sold
+      // Total items sold
       order.items.forEach(item => {
         totalItemsSold += item.quantity;
       });
 
-      // status based counts
+      // Status counts
       if (order.status === "Delivered") deliveredCount++;
       else if (order.status === "Cancelled") cancelledCount++;
       else pendingCount++;
+    });
+
+    // ===============================
+    // REFUND ADJUSTMENTS (NEW)
+    // ===============================
+    refunds.forEach(refund => {
+      if (refund.addedAmount) {
+        totalRevenue += refund.addedAmount;
+      }
+      if (refund.deletedAmount) {
+        totalRevenue -= refund.deletedAmount;
+      }
     });
 
     res.json({
@@ -35,6 +53,7 @@ const getDashboardStats = async (req, res) => {
         pendingCount
       }
     });
+
   } catch (error) {
     console.log(error);
     res.json({ success: false, message: "Dashboard Error" });

@@ -9,6 +9,9 @@ import orderRouter from "./routes/orderRoute.js";
 import dashboardRouter from "./routes/dashboardRoute.js";
 import analyticsRouter from "./routes/analyticsRoute.js";
 
+import refundRouter from "./routes/refundRoute.js";
+
+
 // app config
 const app = express();
 const port = process.env.PORT || 4000;
@@ -29,6 +32,12 @@ app.use("/api/cart",cartRouter)
 app.use("/api/order",orderRouter)
 app.use("/api/dashboard", dashboardRouter);
 app.use("/api/analytics", analyticsRouter);
+
+
+app.use("/api/refund", refundRouter);
+
+
+
 
 app.get("/", (req, res) => {
   res.send("API Working");
