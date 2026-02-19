@@ -103,7 +103,7 @@ const removeRefund = async (id) => {
         <div className="input-group">
           <input
             type="number"
-            placeholder="Add Amount"
+            placeholder="Add Refund Amount"
             value={addAmount}
             onChange={(e) => setAddAmount(e.target.value)}
           />
@@ -115,7 +115,7 @@ const removeRefund = async (id) => {
         <div className="input-group">
           <input
             type="number"
-            placeholder="Delete Amount"
+            placeholder="Delete Refund Amount"
             value={deleteAmount}
             onChange={(e) => setDeleteAmount(e.target.value)}
           />
@@ -133,8 +133,8 @@ const removeRefund = async (id) => {
         <table className="refund-table">
           <thead>
             <tr>
-              <th>Added Amount</th>
-              <th>Deleted Amount</th>
+              <th>Added Refund Amount</th>
+              <th>Deleted Refund Amount</th>
               <th>Added Date & Time</th>
               <th>Deleted Date & Time</th>
               <th>Action</th>
