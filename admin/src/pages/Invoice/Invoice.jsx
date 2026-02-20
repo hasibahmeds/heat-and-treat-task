@@ -12,14 +12,8 @@ const Invoice = () => {
     return <div style={{ padding: 20 }}>No order data found.</div>;
   }
 
-  // const deliveryCharge = 40;
-  // const subTotal = order.amount - deliveryCharge;
-
-
-  // Replace hardcoded deliveryCharge
-const deliveryCharge = order.deliveryCharge || 40; // fallback just in case
-const subTotal = order.amount - deliveryCharge;
-
+  const deliveryCharge = 40;
+  const subTotal = order.amount - deliveryCharge;
 
   const downloadPDF = () => {
     const doc = new jsPDF();
@@ -113,25 +107,13 @@ const subTotal = order.amount - deliveryCharge;
     // ================= SUMMARY TABLE =================
     const finalY = doc.lastAutoTable.finalY + 10;
 
-    // autoTable(doc, {
-    //   startY: finalY,
-    //   body: [
-    //     ["Sub Total", `${subTotal} TK`],
-    //     ["Delivery Charge", `${deliveryCharge} TK`],
-    //     ["Grand Total", `${order.amount} TK`],
-    //   ],
-
-
-
     autoTable(doc, {
-  startY: finalY,
-  body: [
-    ["Sub Total", `${subTotal} TK`],
-    ["Delivery Charge", `${deliveryCharge} TK (${order.deliveryArea || '—'})`],
-    ["Grand Total", `${order.amount} TK`],
-  ],
-
-
+      startY: finalY,
+      body: [
+        ["Sub Total", `${subTotal} TK`],
+        ["Delivery Charge", `${deliveryCharge} TK`],
+        ["Grand Total", `${order.amount} TK`],
+      ],
       theme: "grid",
       styles: { fontSize: 11 },
       columnStyles: {
