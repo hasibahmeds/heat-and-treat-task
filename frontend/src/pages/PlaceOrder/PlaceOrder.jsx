@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const PlaceOrder = () => {
-  const { getTotalCartAmount, token, food_list, cartItems, url, setCartItems } = useContext(StoreContext);
+  const { getTotalCartAmount, token, food_list, cartItems, url } = useContext(StoreContext);
 
   const [data, setData] = useState({
     firstName: "",
@@ -67,10 +67,6 @@ const PlaceOrder = () => {
 
       if (response.data.success) {
         toast.success("Order Placed Successfully!"); // 🔥 toast message
-        
-        // 🔥 NEW: Clear cart after successful order
-        setCartItems({});
-
         navigate("/myorders");
       } else {
         toast.error("Error placing order"); // 🔥 toast message
