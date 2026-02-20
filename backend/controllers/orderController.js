@@ -244,15 +244,21 @@
 
 // orderController.js
 
+// orderController.js
+
 import orderModel from "../models/orderModel.js";
 import userModel from "../models/userModel.js";
 
-// Frontend base URL (env fallback to localhost)
-const frontend_url = process.env.FRONTEND_URL || "http://localhost:5173";
+// ❌ REMOVE this line:
+// const frontend_url = process.env.FRONTEND_URL || "http://localhost:5173";
 
 // Placing user order (Cash on Delivery - No Stripe)
 const placeOrder = async (req, res) => {
   try {
+
+    // ✅ Dynamically detect frontend URL
+    const frontend_url = process.env.FRONTEND_URL || req.headers.origin;
+
     const newOrder = new orderModel({
       userId: req.body.userId,
       items: req.body.items,
@@ -307,9 +313,6 @@ const updateStatus = async (req, res) => {
   }
 };
 
-
-
-
 // API for deleting an order
 const deleteOrder = async (req, res) => {
   try {
@@ -320,7 +323,6 @@ const deleteOrder = async (req, res) => {
     res.json({ success: false, message: "Error deleting order" });
   }
 };
-
 
 export { placeOrder, userOrders, listOrders, updateStatus, deleteOrder };
 
