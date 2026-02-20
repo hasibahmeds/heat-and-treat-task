@@ -36,15 +36,17 @@ export const sslInit = async (req, res) => {
     };
 
     // Create order first (PENDING)
-    const order = await orderModel.create({
-      userId,
-      items,
-      amount,
-      address: addressMerged,
-      payment: false,
-      transactionId: tran_id,
-      paymentStatus: "pending"
-    });
+const order = await orderModel.create({
+  userId,
+  items,
+  amount,
+  address: addressMerged,
+  deliveryArea: req.body.deliveryArea || addressMerged.city || "Unknown",
+  deliveryCharge: req.body.deliveryCharge || 0,
+  payment: false,
+  transactionId: tran_id,
+  paymentStatus: "pending"
+});
 
     const backend_url =
       process.env.BACKEND_URL ||

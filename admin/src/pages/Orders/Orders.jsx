@@ -247,8 +247,13 @@ useEffect(() => {
 
                 <div className="order-item-address">
                   <p>{order.address?.email || "(No email)"}</p>
+                  {/* <p>{order.address?.address ? order.address.address + "." : ""}</p>
+                  <p>{order.address?.city ? order.address.city + ". " : ""}</p> */}
+
                   <p>{order.address?.address ? order.address.address + "." : ""}</p>
-                  <p>{order.address?.city ? order.address.city + ". " : ""}</p>
+<p>{order.deliveryArea ? order.deliveryArea + " • " : ""}
+  {order.deliveryCharge ? order.deliveryCharge + " TK" : ""}
+</p>
                   <p>{formatDate(order.date)}</p>
                 </div>
                 <p className='order-item-phone'>{order.address?.phone || "(No phone)"}</p>

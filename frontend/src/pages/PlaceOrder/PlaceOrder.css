@@ -195,6 +195,50 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+.delivery-area-select {
+  margin-bottom: 15px;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid gray;
+  border-radius: 5px;
+  background: transparent;
+  color: white;
+  font-size: 16px;
+}
+
+.delivery-area-select option {
+  background: #222;
+  color: white;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* ---------------- MAP SECTION ---------------- */
 
 .cart-map {

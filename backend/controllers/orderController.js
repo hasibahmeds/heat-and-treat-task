@@ -253,10 +253,9 @@ import userModel from "../models/userModel.js";
 // const frontend_url = process.env.FRONTEND_URL || "http://localhost:5173";
 
 // Placing user order (Cash on Delivery - No Stripe)
+// orderController.js → placeOrder
 const placeOrder = async (req, res) => {
   try {
-
-    // ✅ Dynamically detect frontend URL
     const frontend_url = process.env.FRONTEND_URL || req.headers.origin;
 
     const newOrder = new orderModel({
@@ -264,16 +263,15 @@ const placeOrder = async (req, res) => {
       items: req.body.items,
       amount: req.body.amount,
       address: req.body.address,
-      payment: true // Mark as paid (Cash on Delivery)
+      deliveryArea: req.body.address?.deliveryArea || "Not specified",
+      deliveryCharge: req.body.deliveryCharge || 0,
+      payment: true // COD
     });
 
     await newOrder.save();
     await userModel.findByIdAndUpdate(req.body.userId, { cartData: {} });
 
-    // Non-breaking additional field using frontend_url
-    const order_url = `${frontend_url}/orders/${newOrder._id}`;
-
-    res.json({ success: true, message: "Order Placed Successfully", order_url });
+    res.json({ success: true, message: "Order Placed Successfully" });
   } catch (error) {
     console.log(error);
     res.json({ success: false, message: "Error" });
