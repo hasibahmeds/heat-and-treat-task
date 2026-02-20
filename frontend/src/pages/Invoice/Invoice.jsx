@@ -15,7 +15,8 @@ const Invoice = () => {
     return <div style={{ padding: 20 }}>No order data found.</div>;
   }
 
-  const deliveryCharge = 40;
+  // Use the delivery charge saved with the order (fallback only if missing)
+  const deliveryCharge = order.deliveryCharge || 40;
   const subTotal = order.amount - deliveryCharge;
 
   const downloadPDF = async () => {
@@ -24,7 +25,6 @@ const Invoice = () => {
     // Small delay so user can see loading effect
     setTimeout(() => {
       const doc = new jsPDF();
-
       const dateObj = new Date(order.date);
       const formattedDate = dateObj.toLocaleDateString();
       const formattedTime = dateObj.toLocaleTimeString();
@@ -34,23 +34,21 @@ const Invoice = () => {
       doc.text("INVOICE", 14, 20);
 
       doc.setFontSize(11);
-
       const labelX = 14;
       const colonX = 45;
       const valueX = 52;
-
       let y = 30;
 
       doc.text("Invoice No", labelX, y);
       doc.text(":", colonX, y);
       doc.text(String(order._id), valueX, y);
-
       y += 7;
+
       doc.text("Date", labelX, y);
       doc.text(":", colonX, y);
       doc.text(formattedDate, valueX, y);
-
       y += 7;
+
       doc.text("Time", labelX, y);
       doc.text(":", colonX, y);
       doc.text(formattedTime, valueX, y);
@@ -59,10 +57,9 @@ const Invoice = () => {
       y += 14;
       doc.setFontSize(12);
       doc.text("Customer Details", labelX, y);
-
       y += 10;
-      doc.setFontSize(11);
 
+      doc.setFontSize(11);
       doc.text("Name", labelX, y);
       doc.text(":", colonX, y);
       doc.text(
@@ -70,18 +67,19 @@ const Invoice = () => {
         valueX,
         y
       );
-
       y += 8;
+
       doc.text("Address", labelX, y);
       doc.text(":", colonX, y);
 
-      const fullAddress = `${order.address?.address || ""}, ${
-        order.address?.city || ""
+      // ✅ Show delivery area next to address
+      const fullAddress = `${order.address?.address || ""}${
+        order.address?.deliveryArea ? ", " + order.address.deliveryArea : ""
       }`;
 
       const addressLines = doc.splitTextToSize(fullAddress, 130);
-
       doc.text(addressLines, valueX, y);
+
       y += addressLines.length * 6 + 3;
 
       doc.text("Phone", labelX, y);
@@ -90,7 +88,6 @@ const Invoice = () => {
 
       // ================= ITEMS TABLE =================
       y += 15;
-
       const tableData = order.items.map((item, index) => [
         index + 1,
         item.name,
@@ -108,6 +105,7 @@ const Invoice = () => {
         headStyles: { fillColor: [0, 0, 0] },
       });
 
+      // ================= SUMMARY TABLE =================
       const finalY = doc.lastAutoTable.finalY + 10;
 
       autoTable(doc, {
@@ -128,7 +126,6 @@ const Invoice = () => {
       });
 
       doc.save(`Invoice-${order._id}.pdf`);
-
       setLoading(false);
     }, 600); // 600ms smooth loading effect
   };
@@ -137,6 +134,7 @@ const Invoice = () => {
     <div style={{ padding: 40, textAlign: "center" }}>
       <h2 className="hed">Invoice</h2>
 
+      {/* ✅ Button Centered */}
       <button
         onClick={downloadPDF}
         className="dbutton"

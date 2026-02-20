@@ -21,7 +21,10 @@ const orderSchema = new mongoose.Schema({
   // 🔽 ADD THESE
   payment: { type: Boolean, default: false },
   transactionId: { type: String },
-  paymentStatus: { type: String, default: "pending" }
+  paymentStatus: { type: String, default: "pending" },
+
+  deliveryArea:   { type: String },
+  deliveryCharge: { type: Number, default: 0 },
 });
 
 const orderModel = mongoose.models.order || mongoose.model("order",orderSchema);
