@@ -68,15 +68,15 @@ const Cart = () => {
             <p>{getTotalCartAmount()} TK</p>
           </div>
           <hr />
-          <div className="cart-total-details">
+          {/* <div className="cart-total-details">
             <p>Delivery Fee</p>
             <p>Calculated at checkout</p>
-          </div>
-          <hr />
-          <div className="cart-total-details">
+          </div> */}
+          {/* <hr /> */}
+          {/* <div className="cart-total-details">
             <b>Total</b>
             <b>Calculated at checkout</b>
-          </div>
+          </div> */}
           <button onClick={handleCheckout} disabled={loading}>
             {loading ? "Loading..." : "CHECKOUT"}
           </button>
