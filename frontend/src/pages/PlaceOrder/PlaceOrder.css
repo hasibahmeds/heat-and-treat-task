@@ -274,6 +274,75 @@
 
 
 
+
+
+
+
+
+
+
+
+/* Base select styling (already have this or similar) */
+.place-order-left select.delivery-area-select {
+  margin-bottom: 15px;
+  width: 100%;
+  padding: 10px 30px 10px 10px;           /* right padding for arrow */
+  border: 1px solid gray;
+  border-radius: 5px;
+  background: transparent;
+  color: white;
+  font-size: 16px;
+  font-family: inherit;
+  box-sizing: border-box;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23aaa' d='M2 4l4 4 4-4z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 12px;
+}
+
+/* ← This is the important part: style the dropdown options */
+.place-order-left select.delivery-area-select option {
+  background-color: #1a1a1a;          /* dark background instead of white */
+  color: #ffffff;                     /* white text */
+  padding: 8px 12px;                  /* some inner spacing */
+  font-size: 15px;
+}
+
+/* Hover / selected state in the dropdown */
+.place-order-left select.delivery-area-select option:hover,
+.place-order-left select.delivery-area-select option:checked,
+.place-order-left select.delivery-area-select option[selected] {
+  background-color: #ff2600 !important;   /* your brand orange when hovered/selected */
+  color: white;
+}
+
+/* Firefox needs this to respect the background */
+@supports (-moz-appearance:none) {
+  .place-order-left select.delivery-area-select option {
+    background-color: #1a1a1a;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* Responsive map height */
 @media (max-width: 750px) {
   .map-wrapper iframe {
