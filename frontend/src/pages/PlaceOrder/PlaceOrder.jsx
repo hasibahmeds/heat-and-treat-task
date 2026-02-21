@@ -120,6 +120,7 @@ const PlaceOrder = () => {
     if (!selectedArea) return toast.error("Please select delivery area");
 
     setLoadingOnline(true);
+    // toast.info("Redirecting to payment gateway...", { autoClose: 3000 });
 
     const payload = {
       amount: getTotalCartAmount() + deliveryFee,

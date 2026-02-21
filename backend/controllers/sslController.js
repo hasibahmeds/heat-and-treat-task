@@ -98,6 +98,7 @@ export const sslInit = async (req, res) => {
   }
 };
 
+
 // Keep your existing success/fail/cancel handlers
 export const sslSuccess = async (req, res) => { /* ... */ };
 export const sslFail = async (req, res) => { /* ... */ };
