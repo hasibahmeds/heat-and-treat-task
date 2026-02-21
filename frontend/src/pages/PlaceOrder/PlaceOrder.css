@@ -165,9 +165,9 @@
   color: white;
 }
 
-.hr {
+.place-order-page .hr {
   height: 1px;
-  background-color: #979797d7;
+  background-color: #4b2626d7;
   border: none;
   margin: 8px 0;
 }
