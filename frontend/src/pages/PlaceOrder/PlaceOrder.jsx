@@ -1,86 +1,43 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// PlaceOrder.jsx
 import { useContext, useEffect, useState } from "react";
 import "./PlaceOrder.css";
 import { StoreContext } from "../../context/StoreContext";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+
+// 🔥 Toast imports
 import { toast } from "react-toastify";
-import { DELIVERY_AREAS } from "../../utils/deliveryAreas";   // ← new
 
 const PlaceOrder = () => {
-  const { getTotalCartAmount, token, food_list, cartItems, url, setCartItems } =
-    useContext(StoreContext);
-
-  const navigate = useNavigate();
+  const { getTotalCartAmount, token, food_list, cartItems, url } = useContext(StoreContext);
 
   const [data, setData] = useState({
     firstName: "",
     lastName: "",
     email: "",
+    // street: "",
     address: "",
-    phone: "",
-    deliveryArea: "",           // ← new
+    city: "",
+    // district: "",
+    phone: ""
   });
 
-  const [selectedCharge, setSelectedCharge] = useState(0);   // ← new
+  // 🔥 NEW: Loading states (Added only this)
+  const [loadingCOD, setLoadingCOD] = useState(false);
+  const [loadingOnline, setLoadingOnline] = useState(false);
 
   const onChangeHandler = (event) => {
     const name = event.target.name;
     const value = event.target.value;
     setData((data) => ({ ...data, [name]: value }));
-
-    // When delivery area changes → update fee
-    if (name === "deliveryArea") {
-      const area = DELIVERY_AREAS.find((a) => a.name === value);
-      setSelectedCharge(area ? area.charge : 0);
-    }
   };
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!token || getTotalCartAmount() === 0) {
       navigate("/cart");
     }
-  }, [token, getTotalCartAmount, navigate]);
+  }, [token, navigate, getTotalCartAmount]);
 
   const generateOrderItems = () => {
     let orderItems = [];
@@ -92,78 +49,72 @@ const PlaceOrder = () => {
     return orderItems;
   };
 
-  const totalAmount = getTotalCartAmount() + selectedCharge;
-
-  // ────────────────────────────────────────
-  //        CASH ON DELIVERY
-  // ────────────────────────────────────────
+  // ---------------- COD ----------------
   const placeCODOrder = async (e) => {
     e.preventDefault();
-
-    if (!data.deliveryArea) {
-      toast.error("Please select a delivery area");
-      return;
-    }
+    setLoadingCOD(true); // 🔥 Start loading
 
     const orderData = {
-      address: { ...data, deliveryArea: data.deliveryArea },
+      address: data,
       items: generateOrderItems(),
-      amount: totalAmount,
-      deliveryCharge: selectedCharge,     // ← new field
+      amount: getTotalCartAmount() + 40, // delivery charge
     };
 
     try {
       const response = await axios.post(`${url}/api/order/place`, orderData, {
-        headers: { token },
+        headers: { token }
       });
 
       if (response.data.success) {
-        toast.success("Order Placed Successfully!");
-        setCartItems({});                   // ← clear cart in context
-        localStorage.removeItem("cartItems"); // optional
+        toast.success("Order Placed Successfully!"); // 🔥 toast message
         navigate("/myorders");
       } else {
-        toast.error(response.data.message || "Error placing order");
+        toast.error("Error placing order"); // 🔥 toast message
       }
     } catch (error) {
-      toast.error("Network error");
+      console.log(error);
+      toast.error("Something went wrong!"); // 🔥 toast message
+    } finally {
+      setLoadingCOD(false); // 🔥 Stop loading
     }
   };
 
-  // ────────────────────────────────────────
-  //        ONLINE PAYMENT (SSL)
-  // ────────────────────────────────────────
+  // ---------------- SSLCommerz Online Payment ----------------
   const placeOnlinePaymentOrder = async (e) => {
     e.preventDefault();
-
-    if (!data.deliveryArea) {
-      toast.error("Please select a delivery area");
-      return;
-    }
+    setLoadingOnline(true); // 🔥 Start loading
 
     const orderItems = generateOrderItems();
+    const totalAmount = getTotalCartAmount() + 40;
 
     try {
+      // Backend endpoint to initialize SSLCommerz (include auth token)
       const response = await axios.post(
         `${url}/api/order/ssl-init`,
         {
           amount: totalAmount,
+          currency: "BDT",
           customer: data,
           items: orderItems,
-          deliveryCharge: selectedCharge,     // ← pass it
-          deliveryArea: data.deliveryArea,    // ← pass it
         },
         { headers: { token } }
       );
 
+      console.log("SSL INIT RESPONSE (frontend):", response.data);
+
       const gatewayUrl = response.data?.GatewayPageURL || response.data?.url;
+
       if (gatewayUrl) {
+        // Redirect user to SSLCommerz payment page
         window.location.href = gatewayUrl;
       } else {
-        toast.error("Payment gateway error");
+        toast.error("Payment initialization failed!"); // 🔥 toast message
       }
     } catch (error) {
-      toast.error("Something went wrong");
+      console.log(error);
+      toast.error("Something went wrong!"); // 🔥 toast message
+    } finally {
+      setLoadingOnline(false); // 🔥 Stop loading
     }
   };
 
@@ -172,33 +123,22 @@ const PlaceOrder = () => {
       <form className="place-order" onSubmit={placeCODOrder}>
         <div className="place-order-left">
           <p className="title">Delivery Information</p>
-
           <div className="multi-fields">
-            <input name="firstName" value={data.firstName} onChange={onChangeHandler} placeholder="First Name" required />
-            <input name="lastName"  value={data.lastName}  onChange={onChangeHandler} placeholder="Last Name"  required />
+            <input required name="firstName" onChange={onChangeHandler} value={data.firstName} type="text" placeholder="First Name" />
+            <input required name="lastName" onChange={onChangeHandler} value={data.lastName} type="text" placeholder="Last Name" />
           </div>
-
-          <input name="email"     value={data.email}     onChange={onChangeHandler} placeholder="Email Address" required type="email" />
-          <textarea className="address-textarea" name="address" value={data.address} onChange={onChangeHandler} placeholder="Address (House, Road, etc)" required />
-
-          {/* ─── Delivery Area Select ─── */}
-          <select
-            name="deliveryArea"
-            value={data.deliveryArea}
-            onChange={onChangeHandler}
-            required
-            className="delivery-area-select"
-          >
-            <option value="">Select Delivery Area</option>
-            {DELIVERY_AREAS.map((area) => (
-              <option key={area.name} value={area.name}>
-                {area.name} (৳{area.charge})
-              </option>
-            ))}
-          </select>
-
-          <input name="phone" value={data.phone} onChange={onChangeHandler} placeholder="Phone" required />
-
+          <input required name="email" onChange={onChangeHandler} value={data.email} type="email" placeholder="Email Address" />
+          {/* <textarea className="address-textarea" required name="street" onChange={onChangeHandler} value={data.street} type="text" placeholder="Street" /> */}
+          <textarea className="address-textarea" required name="address" onChange={onChangeHandler} value={data.address} type="text" placeholder="Address" />
+          <div className="multi-fields">
+            <textarea className="address-textarea" required name="city" onChange={onChangeHandler} value={data.city} type="text" placeholder="City" />
+            {/* <textarea className="address-textarea" required name="district" onChange={onChangeHandler} value={data.district} type="text" placeholder='District' /> */}
+          </div>
+          <div className="multi-fields">
+            {/* <input required name="zipcode" onChange={onChangeHandler} value={data.zipcode} type="text" placeholder='Zip Code' /> */}
+            {/* <input required name="country" onChange={onChangeHandler} value={data.country} type="text" placeholder='Country' /> */}
+          </div>
+          <input required name="phone" onChange={onChangeHandler} value={data.phone} type="text" placeholder="Phone" />
         </div>
 
         <div className="place-order-right">
@@ -212,30 +152,35 @@ const PlaceOrder = () => {
               <hr className="hr" />
               <div className="cart-total-details">
                 <p>Delivery Fee</p>
-                <p>{selectedCharge} TK</p>
+                <p>{getTotalCartAmount() === 0 ? 0 : 40} TK</p>    {/* delivery charge at the 3rd end 0 */}
               </div>
               <hr className="hr" />
               <div className="cart-total-details">
                 <b>Total</b>
-                <b>{totalAmount} TK</b>
+                <b>{getTotalCartAmount() === 0 ? 0 : getTotalCartAmount() + 40} TK</b>   {/* delivery charge at the end 0 */}
               </div>
-
               <div className="payment-buttons">
-                <button type="submit" className="cod-btn">
-                  Cash on Delivery
+                <button type="submit" className="cod-btn" disabled={loadingCOD}>
+                  {loadingCOD ? "Placing Order..." : "Cash on Delivery"}
                 </button>
-                <button type="button" className="online-btn" onClick={placeOnlinePaymentOrder}>
-                  Online Payment
+
+                <button
+                  type="button"
+                  className="online-btn"
+                  onClick={placeOnlinePaymentOrder}
+                  disabled={loadingOnline}
+                >
+                  {loadingOnline ? "Processing..." : "Online Payment"}
                 </button>
               </div>
             </div>
+            {/* <button type="submit">PLACE ORDER</button> */}
           </div>
         </div>
       </form>
 
-      {/* map ... */}
-          {/* ---------------- DELIVERY ZONE MAP ---------------- */}
-      {/* <div className="cart-map">
+      {/* ---------------- DELIVERY ZONE MAP ---------------- */}
+      <div className="cart-map">
         <p className="map-text">
           Before checkout, Please ensure the delivery zone.
         </p>
@@ -248,7 +193,7 @@ const PlaceOrder = () => {
             referrerPolicy="no-referrer-when-downgrade"
           ></iframe>
         </div>
-      </div> */}
+      </div>
     </div>
   );
 };
