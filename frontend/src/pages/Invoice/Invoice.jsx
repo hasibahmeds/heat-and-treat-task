@@ -6,7 +6,7 @@ import "./Invoice.css";
 
 const Invoice = () => {
   const location = useLocation();
-  const order = location.state?.order;
+  const order = location.state?.order;  
 
   // 🔥 NEW: Loading state
   const [loading, setLoading] = useState(false);
