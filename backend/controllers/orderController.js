@@ -253,30 +253,69 @@ import userModel from "../models/userModel.js";
 // const frontend_url = process.env.FRONTEND_URL || "http://localhost:5173";
 
 // Placing user order (Cash on Delivery - No Stripe)
+
+
+const DELIVERY_FEES = {
+  "Motijheel": 50,
+  "Shahbag": 40,
+  "Dhanmondi": 30,
+  "Farmgate": 30,
+  "Agargaon": 40,
+  "Mohammadpur": 50,
+  "Mirpur": 50,
+  "Gulshan": 60,
+  "Banani": 60,
+  "Uttara": 70
+};
+
+
+
+
+
 const placeOrder = async (req, res) => {
   try {
+    const { items, amount, address, userId } = req.body;
 
-    // ✅ Dynamically detect frontend URL
-    const frontend_url = process.env.FRONTEND_URL || req.headers.origin;
+    if (!address?.deliveryArea) {
+      return res.status(400).json({ success: false, message: "Delivery area is required" });
+    }
+
+    const selectedArea = address.deliveryArea;
+    const expectedFee = DELIVERY_FEES[selectedArea] || 0;
+
+    // Calculate real subtotal from items (do NOT trust frontend amount)
+    const realSubtotal = items.reduce((sum, item) => {
+      return sum + (Number(item.price) * Number(item.quantity));
+    }, 0);
+
+    const expectedTotal = realSubtotal + expectedFee;
+
+    // Allow small difference for rounding issues
+    if (Math.abs(Number(amount) - expectedTotal) > 1) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid total amount - delivery fee or subtotal mismatch"
+      });
+    }
 
     const newOrder = new orderModel({
-      userId: req.body.userId,
-      items: req.body.items,
-      amount: req.body.amount,
-      address: req.body.address,
-      payment: true // Mark as paid (Cash on Delivery)
+      userId,
+      items,
+      amount: expectedTotal, // use calculated total for safety
+      address,
+      payment: true, // COD = considered paid
+      paymentStatus: "pending" // or "cod" if you want to distinguish
     });
 
     await newOrder.save();
-    await userModel.findByIdAndUpdate(req.body.userId, { cartData: {} });
 
-    // Non-breaking additional field using frontend_url
-    const order_url = `${frontend_url}/orders/${newOrder._id}`;
+    // Clear cart
+    await userModel.findByIdAndUpdate(userId, { cartData: {} });
 
-    res.json({ success: true, message: "Order Placed Successfully", order_url });
+    res.json({ success: true, message: "Order Placed Successfully" });
   } catch (error) {
-    console.log(error);
-    res.json({ success: false, message: "Error" });
+    console.error("placeOrder error:", error);
+    res.status(500).json({ success: false, message: "Error placing order" });
   }
 };
 
@@ -325,6 +364,7 @@ const deleteOrder = async (req, res) => {
 };
 
 export { placeOrder, userOrders, listOrders, updateStatus, deleteOrder };
+
 
 
 

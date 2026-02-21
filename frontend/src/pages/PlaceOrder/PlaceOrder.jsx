@@ -1,199 +1,220 @@
-import { useContext, useEffect, useState } from "react";
+      {/* ---------------- DELIVERY ZONE MAP ---------------- */}
+      // <div className="cart-map">
+      //   <p className="map-text">
+      //     Before checkout, Please ensure the delivery zone.
+      //   </p>
+
+      //   <div className="map-wrapper">
+      //     <iframe
+      //       src="https://www.google.com/maps/d/embed?mid=10GBM7v23KfBnAifAOFeHJ36LFdgu5nA&ehbc=2E312F"
+      //       width="640"
+      //       height="480"
+      //       referrerPolicy="no-referrer-when-downgrade"
+      //     ></iframe>
+      //   </div>
+      // </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      import { useContext, useEffect, useState } from "react";
 import "./PlaceOrder.css";
 import { StoreContext } from "../../context/StoreContext";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
-// 🔥 Toast imports
 import { toast } from "react-toastify";
 
-const PlaceOrder = () => {
-  const { getTotalCartAmount, token, food_list, cartItems, url } = useContext(StoreContext);
+const deliveryAreas = [
+  { name: "Motijheel",    fee: 50 },
+  { name: "Shahbag",      fee: 40 },
+  { name: "Dhanmondi",    fee: 30 },
+  { name: "Farmgate",     fee: 30 },
+  { name: "Agargaon",     fee: 40 },
+  { name: "Mohammadpur",  fee: 50 },
+  { name: "Mirpur",       fee: 50 },
+  { name: "Gulshan",      fee: 60 },
+  { name: "Banani",       fee: 60 },
+  { name: "Uttara",       fee: 70 },
+];
 
-  const [data, setData] = useState({
+const PlaceOrder = () => {
+  const { getTotalCartAmount, token, food_list, cartItems, url, setCartItems } = useContext(StoreContext);
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     email: "",
-    // street: "",
     address: "",
-    city: "",
-    // district: "",
     phone: ""
   });
 
-  // 🔥 NEW: Loading states (Added only this)
+  const [selectedArea, setSelectedArea] = useState("");
+  const [deliveryFee, setDeliveryFee] = useState(0);
+
   const [loadingCOD, setLoadingCOD] = useState(false);
   const [loadingOnline, setLoadingOnline] = useState(false);
 
-  const onChangeHandler = (event) => {
-    const name = event.target.name;
-    const value = event.target.value;
-    setData((data) => ({ ...data, [name]: value }));
-  };
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
 
-  const navigate = useNavigate();
+    if (name === "deliveryArea") {
+      setSelectedArea(value);
+      const areaObj = deliveryAreas.find(a => a.name === value);
+      setDeliveryFee(areaObj ? areaObj.fee : 0);
+    }
+  };
 
   useEffect(() => {
     if (!token || getTotalCartAmount() === 0) {
       navigate("/cart");
     }
-  }, [token, navigate, getTotalCartAmount]);
+  }, [token, getTotalCartAmount, navigate]);
 
-  const generateOrderItems = () => {
-    let orderItems = [];
-    food_list.forEach((item) => {
-      if (cartItems[item._id] > 0) {
-        orderItems.push({ ...item, quantity: cartItems[item._id] });
-      }
-    });
-    return orderItems;
+  const prepareOrderItems = () => {
+    return food_list
+      .filter(item => cartItems[item._id] > 0)
+      .map(item => ({ ...item, quantity: cartItems[item._id] }));
   };
 
-  // ---------------- COD ----------------
-  const placeCODOrder = async (e) => {
+  const placeCashOnDeliveryOrder = async (e) => {
     e.preventDefault();
-    setLoadingCOD(true); // 🔥 Start loading
+    if (!selectedArea) return toast.error("Please select delivery area");
 
-    const orderData = {
-      address: data,
-      items: generateOrderItems(),
-      amount: getTotalCartAmount() + 40, // delivery charge
+    setLoadingCOD(true);
+
+    const orderPayload = {
+      address: { ...formData, deliveryArea: selectedArea },
+      items: prepareOrderItems(),
+      amount: getTotalCartAmount() + deliveryFee
     };
 
     try {
-      const response = await axios.post(`${url}/api/order/place`, orderData, {
-        headers: { token }
-      });
-
-      if (response.data.success) {
-        toast.success("Order Placed Successfully!"); // 🔥 toast message
+      const res = await axios.post(`${url}/api/order/place`, orderPayload, { headers: { token } });
+      if (res.data.success) {
+        toast.success("Order placed successfully!");
+        setCartItems({}); // Clear cart in context
         navigate("/myorders");
       } else {
-        toast.error("Error placing order"); // 🔥 toast message
+        toast.error(res.data.message || "Order placement failed");
       }
-    } catch (error) {
-      console.log(error);
-      toast.error("Something went wrong!"); // 🔥 toast message
+    } catch (err) {
+      toast.error("Network error");
     } finally {
-      setLoadingCOD(false); // 🔥 Stop loading
+      setLoadingCOD(false);
     }
   };
 
-  // ---------------- SSLCommerz Online Payment ----------------
-  const placeOnlinePaymentOrder = async (e) => {
-    e.preventDefault();
-    setLoadingOnline(true); // 🔥 Start loading
+  const initiateOnlinePayment = async () => {
+    if (!selectedArea) return toast.error("Please select delivery area");
 
-    const orderItems = generateOrderItems();
-    const totalAmount = getTotalCartAmount() + 40;
+    setLoadingOnline(true);
+
+    const payload = {
+      amount: getTotalCartAmount() + deliveryFee,
+      currency: "BDT",
+      customer: { ...formData, deliveryArea: selectedArea },
+      items: prepareOrderItems()
+    };
 
     try {
-      // Backend endpoint to initialize SSLCommerz (include auth token)
-      const response = await axios.post(
-        `${url}/api/order/ssl-init`,
-        {
-          amount: totalAmount,
-          currency: "BDT",
-          customer: data,
-          items: orderItems,
-        },
-        { headers: { token } }
-      );
-
-      console.log("SSL INIT RESPONSE (frontend):", response.data);
-
-      const gatewayUrl = response.data?.GatewayPageURL || response.data?.url;
-
-      if (gatewayUrl) {
-        // Redirect user to SSLCommerz payment page
-        window.location.href = gatewayUrl;
+      const res = await axios.post(`${url}/api/order/ssl-init`, payload, { headers: { token } });
+      const gateway = res.data?.GatewayPageURL || res.data?.url;
+      if (gateway) {
+        window.location.href = gateway;
       } else {
-        toast.error("Payment initialization failed!"); // 🔥 toast message
+        toast.error("Payment gateway error");
       }
-    } catch (error) {
-      console.log(error);
-      toast.error("Something went wrong!"); // 🔥 toast message
+    } catch (err) {
+      toast.error("Something went wrong");
     } finally {
-      setLoadingOnline(false); // 🔥 Stop loading
+      setLoadingOnline(false);
     }
   };
+
+  const subtotal = getTotalCartAmount();
+  const total = subtotal + deliveryFee;
 
   return (
     <div className="place-order-page">
-      <form className="place-order" onSubmit={placeCODOrder}>
+      <form className="place-order" onSubmit={placeCashOnDeliveryOrder}>
         <div className="place-order-left">
           <p className="title">Delivery Information</p>
+
           <div className="multi-fields">
-            <input required name="firstName" onChange={onChangeHandler} value={data.firstName} type="text" placeholder="First Name" />
-            <input required name="lastName" onChange={onChangeHandler} value={data.lastName} type="text" placeholder="Last Name" />
+            <input name="firstName"  value={formData.firstName}  onChange={handleInputChange} placeholder="First Name"  required />
+            <input name="lastName"   value={formData.lastName}   onChange={handleInputChange} placeholder="Last Name"   required />
           </div>
-          <input required name="email" onChange={onChangeHandler} value={data.email} type="email" placeholder="Email Address" />
-          {/* <textarea className="address-textarea" required name="street" onChange={onChangeHandler} value={data.street} type="text" placeholder="Street" /> */}
-          <textarea className="address-textarea" required name="address" onChange={onChangeHandler} value={data.address} type="text" placeholder="Address" />
-          <div className="multi-fields">
-            <textarea className="address-textarea" required name="city" onChange={onChangeHandler} value={data.city} type="text" placeholder="City" />
-            {/* <textarea className="address-textarea" required name="district" onChange={onChangeHandler} value={data.district} type="text" placeholder='District' /> */}
-          </div>
-          <div className="multi-fields">
-            {/* <input required name="zipcode" onChange={onChangeHandler} value={data.zipcode} type="text" placeholder='Zip Code' /> */}
-            {/* <input required name="country" onChange={onChangeHandler} value={data.country} type="text" placeholder='Country' /> */}
-          </div>
-          <input required name="phone" onChange={onChangeHandler} value={data.phone} type="text" placeholder="Phone" />
+
+          <input name="email" value={formData.email} onChange={handleInputChange} type="email" placeholder="Email Address" required />
+
+          <textarea
+            className="address-textarea"
+            name="address"
+            value={formData.address}
+            onChange={handleInputChange}
+            placeholder="Address (House, Road, Area, etc)"
+            required
+          />
+
+          <select
+            name="deliveryArea"
+            value={selectedArea}
+            onChange={handleInputChange}
+            required
+            className="delivery-area-select"
+          >
+            <option value="">Select Delivery Area</option>
+            {deliveryAreas.map(area => (
+              <option key={area.name} value={area.name}>
+                {area.name} (৳ {area.fee})
+              </option>
+            ))}
+          </select>
+
+          <input name="phone" value={formData.phone} onChange={handleInputChange} placeholder="Phone" required />
         </div>
 
         <div className="place-order-right">
           <div className="cart-total">
-            <h2>Cart Totals</h2>
-            <div>
-              <div className="cart-total-details">
-                <p>Subtotal</p>
-                <p>{getTotalCartAmount()} TK</p>
-              </div>
-              <hr className="hr" />
-              <div className="cart-total-details">
-                <p>Delivery Fee</p>
-                <p>{getTotalCartAmount() === 0 ? 0 : 40} TK</p>    {/* delivery charge at the 3rd end 0 */}
-              </div>
-              <hr className="hr" />
-              <div className="cart-total-details">
-                <b>Total</b>
-                <b>{getTotalCartAmount() === 0 ? 0 : getTotalCartAmount() + 40} TK</b>   {/* delivery charge at the end 0 */}
-              </div>
-              <div className="payment-buttons">
-                <button type="submit" className="cod-btn" disabled={loadingCOD}>
-                  {loadingCOD ? "Placing Order..." : "Cash on Delivery"}
-                </button>
-
-                <button
-                  type="button"
-                  className="online-btn"
-                  onClick={placeOnlinePaymentOrder}
-                  disabled={loadingOnline}
-                >
-                  {loadingOnline ? "Processing..." : "Online Payment"}
-                </button>
-              </div>
+            <h2>Order Summary</h2>
+            <div className="cart-total-details">
+              <p>Subtotal</p>
+              <p>{subtotal} TK</p>
             </div>
-            {/* <button type="submit">PLACE ORDER</button> */}
+            <hr />
+            <div className="cart-total-details">
+              <p>Delivery Fee</p>
+              <p>{deliveryFee} TK</p>
+            </div>
+            <hr />
+            <div className="cart-total-details">
+              <b>Total</b>
+              <b>{total} TK</b>
+            </div>
+
+            <div className="payment-buttons">
+              <button type="submit" className="cod-btn" disabled={loadingCOD}>
+                {loadingCOD ? "Placing..." : "Cash on Delivery"}
+              </button>
+              <button type="button" className="online-btn" onClick={initiateOnlinePayment} disabled={loadingOnline}>
+                {loadingOnline ? "Processing..." : "Online Payment"}
+              </button>
+            </div>
           </div>
         </div>
       </form>
-
-      {/* ---------------- DELIVERY ZONE MAP ---------------- */}
-      <div className="cart-map">
-        <p className="map-text">
-          Before checkout, Please ensure the delivery zone.
-        </p>
-
-        <div className="map-wrapper">
-          <iframe
-            src="https://www.google.com/maps/d/embed?mid=10GBM7v23KfBnAifAOFeHJ36LFdgu5nA&ehbc=2E312F"
-            width="640"
-            height="480"
-            referrerPolicy="no-referrer-when-downgrade"
-          ></iframe>
-        </div>
-      </div>
     </div>
   );
 };

@@ -66,66 +66,48 @@ import { StoreContext } from "../../context/StoreContext";
 import axios from "axios";
 import { BsBoxSeamFill } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
+import { formatBDTime } from "../../utils/dateUtils";   // ← add this
 
 const MyOrders = () => {
-
   const navigate = useNavigate();
-
-  const openEmail = (e) => {
-    e.preventDefault();
-    const email = "tastecode.1525@gmail.com";
-
-    // Check if user is on Mobile
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-
-    if (isMobile) {
-      window.location.href = `mailto:${email}`;
-    } else {
-      // Open Gmail Web in new tab for Desktop
-      window.open(
-        `https://mail.google.com/mail/?view=cm&fs=1&to=${email}`,
-        "_blank"
-      );
-    }
-  };
-
   const { url, token } = useContext(StoreContext);
   const [data, setData] = useState([]);
-
-  // 🔥 NEW: Loading states
   const [loadingTrack, setLoadingTrack] = useState(null);
   const [loadingCancel, setLoadingCancel] = useState(null);
 
   const fetchOrders = async (orderId = null) => {
     if (orderId) setLoadingTrack(orderId);
-
-    const response = await axios.post(
-      url + "/api/order/userorders",
-      {},
-      { headers: { token } }
-    );
-
-    setData(response.data.data);
-    setLoadingTrack(null);
+    try {
+      const response = await axios.post(
+        url + "/api/order/userorders",
+        {},
+        { headers: { token } }
+      );
+      setData(response.data.data || []);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoadingTrack(null);
+    }
   };
 
-  // 🔥 Direct Cancel Status Update with Loading
   const statusHandler = async (orderId) => {
     setLoadingCancel(orderId);
-
-    await axios.post(url + "/api/order/status", {
-      orderId,
-      status: "Cancelled",
-    });
-
-    await fetchOrders();
-    setLoadingCancel(null);
+    try {
+      await axios.post(url + "/api/order/status", {
+        orderId,
+        status: "Cancelled",
+      });
+      await fetchOrders();
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoadingCancel(null);
+    }
   };
 
   useEffect(() => {
-    if (token) {
-      fetchOrders();
-    }
+    if (token) fetchOrders();
   }, [token]);
 
   return (
@@ -133,71 +115,61 @@ const MyOrders = () => {
       <h2>My Orders</h2>
       <div className="container">
         {data.map((order, index) => {
-
-          const canAccessInvoice =
-            order.status === "Out for delivery" ||
-            order.status === "Delivered";
+          const canAccessInvoice = ["Out for delivery", "Delivered"].includes(order.status);
 
           return (
             <div key={index} className="my-orders-order">
               <BsBoxSeamFill className="box" />
-              <p>
-                {order.items.map((item, index) => {
-                  if (index === order.items.length - 1) {
-                    return item.name + " x " + item.quantity;
-                  } else {
-                    return item.name + " x " + item.quantity + ", ";
-                  }
-                })}
-              </p>
+              <div className="order-info">
+                <p className="order-date">
+                  {formatBDTime(order.date)}
+                </p>
+                <p className="order-items">
+                  {order.items.map((item, i) =>
+                    i === order.items.length - 1
+                      ? `${item.name} × ${item.quantity}`
+                      : `${item.name} × ${item.quantity}, `
+                  )}
+                </p>
+                <p className="order-amount">{order.amount} TK</p>
+                <p className="order-item-count">Items: {order.items.length}</p>
+                <p className={`status ${order.status.toLowerCase().replace(/\s+/g, '-')}`}>
+                  <span>●</span> {order.status}
+                </p>
+              </div>
 
-              <p>{order.amount} TK</p>
-              <p>Items:{order.items.length}</p>
-              <p>
-                <span>&#x25cf;</span>
-                <b>{order.status}</b>
-              </p>
+              <div className="order-actions">
+                <button
+                  onClick={() => fetchOrders(order._id)}
+                  disabled={loadingTrack === order._id}
+                >
+                  {loadingTrack === order._id ? "Tracking..." : "Track Order"}
+                </button>
 
-              {/* 🔥 Track Order Button with Loading */}
-              <button
-                onClick={() => fetchOrders(order._id)}
-                disabled={loadingTrack === order._id}
-              >
-                {loadingTrack === order._id ? "Tracking..." : "Track Order"}
-              </button>
+                <button
+                  className="invoice-btn"
+                  disabled={!canAccessInvoice}
+                  onClick={() => canAccessInvoice && navigate("/invoice", { state: { order } })}
+                >
+                  Invoice
+                </button>
 
-              {/* 🔥 Invoice Accessible Only After Delivery */}
-              <button
-                className="invoice-btn"
-                disabled={!canAccessInvoice}
-                style={!canAccessInvoice ? { opacity: 0.5, cursor: "not-allowed" } : {}}
-                onClick={() => canAccessInvoice && navigate("/invoice", { state: { order } })}
-              >
-                Invoice
-              </button>
-
-              {/* --- DROPDOWN CANCELLATION SECTION --- */}
-              {order.status === "Food Processing" && (
-                <details className="cancel-dropdown">
-                  <summary>Cancel this order?</summary>
-                  <div className="cancel-content">
-                    <p className="hint">
-                      Cancel option will be disabled within 15 minutes.
-                    </p>
-
-                    {/* 🔥 Confirm Cancel Button with Loading */}
-                    <button
-                      className="confirm-cancel-btn"
-                      onClick={() => statusHandler(order._id)}
-                      disabled={loadingCancel === order._id}
-                    >
-                      {loadingCancel === order._id ? "Cancelling..." : "Confirm Cancel"}
-                    </button>
-
-                  </div>
-                </details>
-              )}
-
+                {order.status === "Food Processing" && (
+                  <details className="cancel-dropdown">
+                    <summary>Cancel this order?</summary>
+                    <div className="cancel-content">
+                      <p className="hint">Cancel option will be disabled within 15 minutes.</p>
+                      <button
+                        className="confirm-cancel-btn"
+                        onClick={() => statusHandler(order._id)}
+                        disabled={loadingCancel === order._id}
+                      >
+                        {loadingCancel === order._id ? "Cancelling..." : "Confirm Cancel"}
+                      </button>
+                    </div>
+                  </details>
+                )}
+              </div>
             </div>
           );
         })}

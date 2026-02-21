@@ -1,3 +1,5 @@
+// src/pages/Dashboard/Dashboard.jsx  (admin)
+
 import { useEffect, useState } from "react";
 import "./Dashboard.css";
 import {
@@ -7,99 +9,134 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
-  BarChart,
-  Bar
+  CartesianGrid,
 } from "recharts";
-import { requestWithFallback } from '../../assets/api';
+import { requestWithFallback } from "../../assets/api";
 
-
-const Dashboard = ({ url }) => {
-
-
-const [chartData, setChartData] = useState([]);
-
-const fetchCharts = async () => {
-  try {
-    const res = await requestWithFallback('get', '/api/analytics/daily');
-    if (res.data.success) setChartData(res.data.data);
-  } catch (err) {
-    // ignore or log
-  }
-};
-
-useEffect(() => {
-  fetchCharts();
-}, []);
-
-
+const Dashboard = () => {
+  const [chartData, setChartData] = useState([]);
   const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const fetchCharts = async () => {
+    try {
+      const res = await requestWithFallback("get", "/api/analytics/daily");
+      if (res.data?.success && Array.isArray(res.data.data)) {
+        // Sort just in case backend didn't
+        const sorted = [...res.data.data].sort((a, b) => a.date.localeCompare(b.date));
+        setChartData(sorted);
+      }
+    } catch (err) {
+      console.error("Failed to load daily chart", err);
+    }
+  };
 
   const fetchStats = async () => {
     try {
-      const res = await requestWithFallback('get', '/api/dashboard/stats');
-      if (res.data.success) setStats(res.data.data);
+      const res = await requestWithFallback("get", "/api/dashboard/stats");
+      if (res.data?.success) {
+        setStats(res.data.data);
+      }
     } catch (err) {
-      // ignore or log
+      setError("Failed to load summary stats");
     }
   };
 
   useEffect(() => {
-    fetchStats();
+    const load = async () => {
+      setLoading(true);
+      await Promise.all([fetchCharts(), fetchStats()]);
+      setLoading(false);
+    };
+    load();
   }, []);
 
-  if (!stats) return <div className="add">Loading...</div>;
+  if (loading) return <div className="add">Loading dashboard data...</div>;
+  if (error) return <div className="add error">{error}</div>;
 
   return (
     <div className="dashboard add">
-      <h3>Dashboard</h3>
+      <h3>Dashboard Overview</h3>
 
       <div className="dashboard-grid">
-        <div className="card">Total Items Sold <span>{stats.totalItemsSold}</span></div>
-        <div className="card">Total Revenue <span>{stats.totalRevenue} TK</span></div>
-        <div className="card delivered">Delivered <span>{stats.deliveredCount}</span></div>
-        <div className="card cancelled">Cancelled <span>{stats.cancelledCount}</span></div>
-        <div className="card pending">Pending <span>{stats.pendingCount}</span></div>
+        <div className="card">
+          <span>Total Items Sold</span>
+          <strong>{stats?.totalItemsSold ?? 0}</strong>
+        </div>
+        <div className="card">
+          <span>Total Revenue</span>
+          <strong>{(stats?.totalRevenue ?? 0).toLocaleString()} TK</strong>
+        </div>
+        <div className="card delivered">
+          <span>Delivered</span>
+          <strong>{stats?.deliveredCount ?? 0}</strong>
+        </div>
+        <div className="card cancelled">
+          <span>Cancelled</span>
+          <strong>{stats?.cancelledCount ?? 0}</strong>
+        </div>
+        <div className="card pending">
+          <span>Pending</span>
+          <strong>{stats?.pendingCount ?? 0}</strong>
+        </div>
       </div>
-              {/* -------- DAILY REVENUE CHART -------- */}
-<div className="dashboard-chart">
-  <h4>Daily Revenue</h4>
-  <ResponsiveContainer width="100%" height={260}>
-    <LineChart data={chartData}>
-      <XAxis dataKey="_id" />
-      <YAxis />
-      <Tooltip />
-      <Line dataKey="totalRevenue" />
-    </LineChart>
-  </ResponsiveContainer>
-</div>
 
-{/* -------- DAILY ORDERS CHART -------- */}
-{/* <div className="dashboard-chart">
-  <h4>Daily Orders</h4>
-  <ResponsiveContainer width="100%" height={260}>
-    <BarChart data={chartData}>
-      <XAxis dataKey="_id" />
-      <YAxis />
-      <Tooltip />
-      <Bar dataKey="totalOrders" />
-    </BarChart>
-  </ResponsiveContainer>
-</div> */}
+      <div className="dashboard-chart">
+        <h4>Daily Revenue Trend</h4>
+        {chartData.length === 0 ? (
+          <p style={{ color: "#888", textAlign: "center", padding: "40px 0" }}>
+            No revenue data available yet
+          </p>
+        ) : (
+          <ResponsiveContainer width="100%" height={300}>
+            <LineChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 20 }}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="date" angle={-35} textAnchor="end" height={60} />
+              <YAxis />
+              <Tooltip
+                formatter={(value) => [`${value.toLocaleString()} TK`, "Revenue"]}
+                labelFormatter={(label) => `Date: ${label}`}
+              />
+              <Line
+                type="monotone"
+                dataKey="totalRevenue"
+                stroke="#8884d8"
+                strokeWidth={2}
+                dot={{ r: 4 }}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        )}
+      </div>
 
-
-<div className="dashboard-chart">
-  <h4>Daily Orders</h4>
-  <ResponsiveContainer width="100%" height={260}>
-    <LineChart data={chartData}>
-      <XAxis dataKey="_id" />
-      <YAxis />
-      <Tooltip />
-      <Line dataKey="totalOrders" />
-    </LineChart>
-  </ResponsiveContainer>
-</div>
-
-
+      <div className="dashboard-chart">
+        <h4>Daily Order Count</h4>
+        {chartData.length === 0 ? (
+          <p style={{ color: "#888", textAlign: "center", padding: "40px 0" }}>
+            No order data available yet
+          </p>
+        ) : (
+          <ResponsiveContainer width="100%" height={300}>
+            <LineChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 20 }}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="date" angle={-35} textAnchor="end" height={60} />
+              <YAxis allowDecimals={false} />
+              <Tooltip
+                formatter={(value) => [`${value} orders`, "Count"]}
+                labelFormatter={(label) => `Date: ${label}`}
+              />
+              <Line
+                type="monotone"
+                dataKey="totalOrders"
+                stroke="#82ca9d"
+                strokeWidth={2}
+                dot={{ r: 4 }}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        )}
+      </div>
     </div>
   );
 };
