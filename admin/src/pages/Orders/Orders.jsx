@@ -238,7 +238,8 @@ const Orders = () => {
                     {order.address?.deliveryArea && (
                       <span style={{ color: "#e67e22", fontWeight: 600 }}>
                         {" "}
-                        ({order.address.deliveryArea})
+                        {order.address.deliveryArea}
+                        {/* ({order.address.deliveryArea}) */}
                       </span>
                     )}
                   </p>
