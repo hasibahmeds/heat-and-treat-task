@@ -1,5 +1,3 @@
-import mongoose from "mongoose"
-
 // const orderSchema = new mongoose.Schema({
 //     userId:{type:String,required:true},
 //     items:{type:Array,required:true},
@@ -9,6 +7,10 @@ import mongoose from "mongoose"
 //     date: { type: Date, default: Date.now },
 //     payment:{type:Boolean,default:true}
 // })
+
+
+import mongoose from "mongoose"
+
 
 const orderSchema = new mongoose.Schema({
   userId: { type: String, required: true },

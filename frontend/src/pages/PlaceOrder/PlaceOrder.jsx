@@ -179,7 +179,7 @@ const PlaceOrder = () => {
             <option value="">Select Delivery Area</option>
             {deliveryAreas.map(area => (
               <option key={area.name} value={area.name}>
-                {area.name} (৳ {area.fee})
+                {area.name} - {area.fee} TK
               </option>
             ))}
           </select>
