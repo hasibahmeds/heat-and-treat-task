@@ -78,6 +78,81 @@
   font-size: 14px;
 }
 
+
+
+
+
+.refund-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 25px;
+}
+
+.refund-card {
+  background: #000;
+  border: 1px solid #464545;
+  border-radius: 6px;
+  padding: 18px 22px;
+  color: #cfcfcf;
+}
+
+.refund-card-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-size: 0.95rem;
+  color: #888;
+}
+
+.order-id {
+  font-weight: 600;
+  color: #ff2600;
+}
+
+.refund-card-body p {
+  margin: 6px 0;
+  font-size: 0.96rem;
+}
+
+.refund-decision {
+  margin: 18px 0 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.refund-decision label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.refund-status {
+  margin-top: 12px;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.refund-status.approved {
+  background: #1e3a2e;
+  color: #4caf50;
+}
+
+.refund-status.rejected {
+  background: #3a1e1e;
+  color: #f44336;
+}
+
+
+
+
+
+
+
 /* 📱 Small Devices */
 @media (max-width: 768px) {
   .refund-inputs {

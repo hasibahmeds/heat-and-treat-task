@@ -4,7 +4,6 @@ import refundModel from "../models/refundModel.js"; // ✅ NEW IMPORT
 const getDashboardStats = async (req, res) => {
   try {
     const orders = await orderModel.find({});
-    const refunds = await refundModel.find({}); // ✅ GET REFUND DATA
 
     let totalItemsSold = 0;
     let totalRevenue = 0;
@@ -12,34 +11,29 @@ const getDashboardStats = async (req, res) => {
     let cancelledCount = 0;
     let pendingCount = 0;
 
-    // ===============================
-    // ORDER CALCULATIONS (UNCHANGED)
-    // ===============================
     orders.forEach(order => {
-
-      // Total revenue from orders
-      totalRevenue += order.amount;
-
-      // Total items sold
+      // Always count items sold (even if later cancelled)
       order.items.forEach(item => {
         totalItemsSold += item.quantity;
       });
 
-      // Status counts
-      if (order.status === "Delivered") deliveredCount++;
-      else if (order.status === "Cancelled") cancelledCount++;
-      else pendingCount++;
-    });
-
-    // ===============================
-    // REFUND ADJUSTMENTS (NEW)
-    // ===============================
-    refunds.forEach(refund => {
-      if (refund.addedAmount) {
-        totalRevenue += refund.addedAmount;
-      }
-      if (refund.deletedAmount) {
-        totalRevenue -= refund.deletedAmount;
+      // Revenue logic:
+      // • Delivered → include
+      // • Cancelled → include ONLY if refund NOT approved
+      // • Others   → include (pending, processing, etc)
+      if (order.status === "Delivered") {
+        totalRevenue += order.amount;
+        deliveredCount++;
+      } 
+      else if (order.status === "Cancelled") {
+        cancelledCount++;
+        if (order.refundStatus !== "approved") {
+          totalRevenue += order.amount;   // still counted until refund approved
+        }
+      } 
+      else {
+        totalRevenue += order.amount;
+        pendingCount++;
       }
     });
 
@@ -53,7 +47,6 @@ const getDashboardStats = async (req, res) => {
         pendingCount
       }
     });
-
   } catch (error) {
     console.log(error);
     res.json({ success: false, message: "Dashboard Error" });

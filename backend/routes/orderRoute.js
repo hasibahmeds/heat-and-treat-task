@@ -101,7 +101,9 @@ import {
   userOrders,
   listOrders,
   updateStatus,
-  deleteOrder
+  deleteOrder,
+  getCancelledOrders,         // ← this line is probably missing or has typo
+  updateRefundStatus
 } from "../controllers/orderController.js";
 
 import {
@@ -135,6 +137,13 @@ orderRouter.post("/ssl-fail", sslFail);
 orderRouter.get("/ssl-fail", sslFail);
 orderRouter.post("/ssl-cancel", sslCancel);
 orderRouter.get("/ssl-cancel", sslCancel);
+
+
+
+
+
+orderRouter.get("/cancelled", getCancelledOrders);
+orderRouter.patch("/:id/refund-status", updateRefundStatus);
 
 export default orderRouter;
 

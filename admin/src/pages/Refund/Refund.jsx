@@ -1,172 +1,131 @@
+// src/pages/Refund/Refund.jsx
 import { useEffect, useState } from "react";
 import "./Refund.css";
 import { toast } from "react-toastify";
 import { requestWithFallback } from "../../assets/api";
+import { formatBDTime } from "../../utils/dateUtils";
 
 const Refund = () => {
-  const [addAmount, setAddAmount] = useState("");
-  const [deleteAmount, setDeleteAmount] = useState("");
-  const [refunds, setRefunds] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [loadingId, setLoadingId] = useState(null);
+  const [cancelledOrders, setCancelledOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [updatingId, setUpdatingId] = useState(null);
 
-  const fetchRefunds = async () => {
+  const fetchCancelledOrders = async () => {
     try {
-      const res = await requestWithFallback("get", "/api/refund/list");
+      const res = await requestWithFallback("get", "/api/order/cancelled");
       if (res.data?.success) {
-        setRefunds(res.data.data || []);
+        setCancelledOrders(res.data.data || []);
       } else {
-        toast.error("Failed to load refund records");
+        toast.error("Failed to load cancelled orders");
       }
     } catch (err) {
-      toast.error("Network error while loading refunds");
-    }
-  };
-
-  const handleAdd = async () => {
-    if (!addAmount || isNaN(addAmount) || Number(addAmount) <= 0) return;
-    setLoading(true);
-    try {
-      const res = await requestWithFallback("post", "/api/refund/add", {
-        amount: Number(addAmount),
-      });
-      if (res.data?.success) {
-        toast.success("Amount added successfully");
-        setAddAmount("");
-        fetchRefunds();
-      }
-    } catch {
-      toast.error("Failed to add refund amount");
-    }
-    setLoading(false);
-  };
-
-  const handleDelete = async () => {
-    if (!deleteAmount || isNaN(deleteAmount) || Number(deleteAmount) <= 0) return;
-    setLoading(true);
-    try {
-      const res = await requestWithFallback("post", "/api/refund/delete", {
-        amount: Number(deleteAmount),
-      });
-      if (res.data?.success) {
-        toast.success("Amount removed successfully");
-        setDeleteAmount("");
-        fetchRefunds();
-      }
-    } catch {
-      toast.error("Failed to delete refund amount");
-    }
-    setLoading(false);
-  };
-
-  const clearAll = async () => {
-    if (!window.confirm("Clear ALL refund records? This cannot be undone.")) return;
-    setLoading(true);
-    try {
-      const res = await requestWithFallback("delete", "/api/refund/clear");
-      if (res.data?.success) {
-        toast.success("All refund records cleared");
-        fetchRefunds();
-      }
-    } catch {
-      toast.error("Failed to clear refunds");
-    }
-    setLoading(false);
-  };
-
-  const removeRefund = async (id) => {
-    if (!window.confirm("Remove this refund entry?")) return;
-    setLoadingId(id);
-    try {
-      const res = await requestWithFallback("delete", `/api/refund/remove/${id}`);
-      if (res.data?.success) {
-        toast.success("Refund entry removed");
-        fetchRefunds();
-      } else {
-        toast.error(res.data?.message || "Failed to remove");
-      }
-    } catch {
       toast.error("Network error");
+    } finally {
+      setLoading(false);
     }
-    setLoadingId(null);
+  };
+
+  const handleRefundDecision = async (orderId, decision) => {   // "approved" | "rejected"
+    if (!["approved", "rejected"].includes(decision)) return;
+
+    if (!window.confirm(`Are you sure you want to ${decision} refund for this order?`)) {
+      return;
+    }
+
+    setUpdatingId(orderId);
+    try {
+      const res = await requestWithFallback("patch", `/api/order/${orderId}/refund-status`, {
+        refundStatus: decision
+      });
+
+      if (res.data?.success) {
+        toast.success(`Refund ${decision === "approved" ? "approved" : "rejected"}`);
+        fetchCancelledOrders(); // refresh list
+      } else {
+        toast.error(res.data?.message || "Failed to update");
+      }
+    } catch (err) {
+      toast.error("Error updating refund status");
+    } finally {
+      setUpdatingId(null);
+    }
   };
 
   useEffect(() => {
-    fetchRefunds();
+    fetchCancelledOrders();
   }, []);
+
+  if (loading) {
+    return <div className="refund-container">Loading cancelled orders...</div>;
+  }
 
   return (
     <div className="refund-container">
-      <h3>Refund / Adjustment Management</h3>
+      <h3>Cancelled Orders – Refund Approval</h3>
 
-      <div className="refund-inputs">
-        <div className="input-group">
-          <input
-            type="number"
-            placeholder="Add amount (positive)"
-            value={addAmount}
-            onChange={(e) => setAddAmount(e.target.value)}
-            min="1"
-          />
-          <button onClick={handleAdd} disabled={loading}>
-            {loading ? "..." : "Add"}
-          </button>
-        </div>
-
-        <div className="input-group">
-          <input
-            type="number"
-            placeholder="Subtract amount (positive)"
-            value={deleteAmount}
-            onChange={(e) => setDeleteAmount(e.target.value)}
-            min="1"
-          />
-          <button onClick={handleDelete} disabled={loading}>
-            {loading ? "..." : "Subtract"}
-          </button>
-        </div>
-
-        <button className="clear-btn" onClick={clearAll} disabled={loading || refunds.length === 0}>
-          {loading ? "..." : "Clear All"}
-        </button>
-      </div>
-
-      {refunds.length === 0 ? (
-        <p style={{ textAlign: "center", marginTop: "2rem", color: "#888" }}>
-          No refund/adjustment records yet.
+      {cancelledOrders.length === 0 ? (
+        <p style={{ textAlign: "center", marginTop: "3rem", color: "#888" }}>
+          No cancelled orders pending refund decision.
         </p>
       ) : (
-        <div className="table-wrapper">
-          <table className="refund-table">
-            <thead>
-              <tr>
-                <th>Added (+)</th>
-                <th>Deleted (-)</th>
-                <th>Added At</th>
-                <th>Deleted At</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {refunds.map((r) => (
-                <tr key={r._id}>
-                  <td>{r.addedAmount > 0 ? `+${r.addedAmount}` : "-"}</td>
-                  <td>{r.deletedAmount > 0 ? `-${r.deletedAmount}` : "-"}</td>
-                  <td>{r.addedAt ? new Date(r.addedAt).toLocaleString() : "-"}</td>
-                  <td>{r.deletedAt ? new Date(r.deletedAt).toLocaleString() : "-"}</td>
-                  <td>
-                    <button
-                      onClick={() => removeRefund(r._id)}
-                      disabled={loadingId === r._id}
-                      className="remove-btn"
-                    >
-                      {loadingId === r._id ? "..." : "Remove"}
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="refund-list">
+          {cancelledOrders.map((order) => (
+            <div key={order._id} className="refund-card">
+              <div className="refund-card-header">
+                {/* <p className="order-id">Order #{order._id.slice(-8)}</p> */}
+                <p className="order-id">Order Id: {order._id.slice(-8)}</p>
+                <p className="order-date">{formatBDTime(order.date)}</p>
+              </div>
+
+              <div className="refund-card-body">
+                <p>
+                  <strong>Customer:</strong> {order.address?.firstName || ""}{" "}
+                  {order.address?.lastName || ""} • {order.address?.phone || "—"}
+                </p>
+                <p>
+                  <strong>Amount:</strong> {order.amount} TK
+                </p>
+                <p>
+                  <strong>Items:</strong>{" "}
+                  {order.items.map(i => `${i.name} ×${i.quantity}`).join(", ")}
+                </p>
+                <p>
+                  <strong>Delivery Area:</strong> {order.address?.deliveryArea || "—"}
+                </p>
+
+                <div className="refund-decision">
+                  <label>
+                    <input
+                      type="radio"
+                      name={`refund-${order._id}`}
+                      checked={order.refundStatus === "approved"}
+                      onChange={() => handleRefundDecision(order._id, "approved")}
+                      disabled={updatingId === order._id || order.refundStatus !== "pending"}
+                    />
+                    Approve Refund (subtract from revenue)
+                  </label>
+
+                  <label>
+                    <input
+                      type="radio"
+                      name={`refund-${order._id}`}
+                      checked={order.refundStatus === "rejected"}
+                      onChange={() => handleRefundDecision(order._id, "rejected")}
+                      disabled={updatingId === order._id || order.refundStatus !== "pending"}
+                    />
+                    Reject Refund (keep in revenue)
+                  </label>
+                </div>
+
+                {order.refundStatus !== "pending" && (
+                  <p className={`refund-status ${order.refundStatus}`}>
+                    {order.refundStatus === "approved" ? "Refund Approved" : "Refund Rejected"}
+                    {order.refundDecisionAt && ` • ${new Date(order.refundDecisionAt).toLocaleString()}`}
+                  </p>
+                )}
+              </div>
+            </div>
+          ))}
         </div>
       )}
     </div>

@@ -19,12 +19,19 @@ const orderSchema = new mongoose.Schema({
   address: { type: Object, required: true },
   status: { type: String, default: "Food Processing" },
   date: { type: Date, default: Date.now },
-
-  // 🔽 ADD THESE
   payment: { type: Boolean, default: false },
   transactionId: { type: String },
-  paymentStatus: { type: String, default: "pending" }
-});
+  paymentStatus: { type: String, default: "pending" },
+
+  // ── NEW FIELDS ────────────────────────────────────────
+  refundStatus: { 
+    type: String, 
+    enum: ["pending", "approved", "rejected"], 
+    default: "pending" 
+  },
+  refundDecisionAt: { type: Date },
+  refundDecisionBy: { type: String }   // admin email or id (optional)
+}, { timestamps: true });
 
 const orderModel = mongoose.models.order || mongoose.model("order",orderSchema);
 

@@ -363,7 +363,59 @@ const deleteOrder = async (req, res) => {
   }
 };
 
-export { placeOrder, userOrders, listOrders, updateStatus, deleteOrder };
+
+
+
+
+
+
+
+// Add these exports
+const getCancelledOrders = async (req, res) => {
+  try {
+    const cancelled = await orderModel.find({ 
+      status: "Cancelled",
+      // refundStatus: "pending"   ← you can filter or show all
+    }).sort({ date: -1 });
+    
+    res.json({ success: true, data: cancelled });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+const updateRefundStatus = async (req, res) => {
+  try {
+    const { refundStatus } = req.body; // "approved" | "rejected"
+    if (!["approved", "rejected"].includes(refundStatus)) {
+      return res.status(400).json({ success: false, message: "Invalid status" });
+    }
+
+    const order = await orderModel.findByIdAndUpdate(
+      req.params.id,
+      { 
+        refundStatus,
+        refundDecisionAt: new Date(),
+        // refundDecisionBy: req.user?.email || "admin"   // if you have admin auth
+      },
+      { new: true }
+    );
+
+    if (!order) {
+      return res.status(404).json({ success: false, message: "Order not found" });
+    }
+
+    res.json({ success: true, data: order });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Failed to update refund status" });
+  }
+};
+
+
+
+export { placeOrder, userOrders, listOrders, updateStatus, deleteOrder, getCancelledOrders, updateRefundStatus };
 
 
 
