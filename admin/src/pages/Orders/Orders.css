@@ -285,7 +285,8 @@
 .order-item .box {
   height: 48px;
   width: 48px;
-  color: #ff2600;
+  /* color: #ff2600; */
+  color: #9dff00;
 }
 
 .oid {
