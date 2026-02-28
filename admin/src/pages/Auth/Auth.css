@@ -1,0 +1,16 @@
+/* src/pages/Auth/Auth.css */
+/* We reuse your LoginPopup.css styles directly: */
+@import "../../components/LoginPopup/LoginPopup.css";
+
+/* Minor page-specific tweaks so it centers as a page */
+.auth-page {
+  min-height: 100vh;
+  display: grid;
+  background-color: #000; /* keeps your dark theme */
+}
+.auth-page .login-popup {
+  position: static;
+  width: 100%;
+  height: auto;
+  background-color: transparent;
+}
