@@ -96,9 +96,26 @@ import { useContext } from 'react'
 import './FoodItem.css'
 import { assets } from '../../assets/assets'
 import { StoreContext } from '../../context/StoreContext'
+import { useNavigate } from "react-router-dom";
 
 const FoodItem = ({id,name,price,description,image}) => {
-  const {cartItems,addToCart,removeFromCart,url} = useContext(StoreContext);
+  const {cartItems,addToCart,removeFromCart,url,token} = useContext(StoreContext);
+
+  const navigate = useNavigate();
+
+const handleOrderNow = async () => {
+  if (!token) {
+    window.dispatchEvent(new Event("openLogin"));
+    return;
+  }
+
+  // Add item with quantity 1 if not already in cart
+  if (!cartItems[id]) {
+    await addToCart(id);
+  }
+
+  navigate("/cart");
+};
   
   // Logic to determine image source
   const imageSrc = image.startsWith("http") ? image : url + "/images/" + image;
@@ -143,7 +160,16 @@ const FoodItem = ({id,name,price,description,image}) => {
           <p>{name}</p>
         </div>
         <p className='food-item-desc'>{description}</p>
-        <p className="food-item-price">{price} TK</p>
+        <div className="price-order-row">
+  <p className="food-item-price">{price} TK</p>
+
+  <button 
+    className="order-now-btn"
+    onClick={handleOrderNow}
+  >
+    Order Now
+  </button>
+</div>
       </div>
     </div>
   )

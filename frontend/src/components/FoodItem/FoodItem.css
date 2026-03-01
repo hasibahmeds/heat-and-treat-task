@@ -119,8 +119,9 @@
   background-color: #ff2600;
   color: white;
   border: none;
-  border-radius: 50px;
-  padding: 10px 18px;
+  border-radius: 6px;
+  /* padding: 10px 18px; */
+  padding: 9px 14px;
   /* font-size: 14px; */
   font-size: 12px;
   font-weight: 600;
@@ -148,7 +149,7 @@
   display: flex;
   align-items: center;
   background: rgba(0, 0, 0, 0.75);
-  border-radius: 50px;
+  border-radius: 6px;
   /* padding: 4px 12px; */
   padding: 0px 3px;
   backdrop-filter: blur(4px);
@@ -160,9 +161,9 @@
   background: transparent;
   border: none;
   color: white;
-  font-size: 20px;
+  font-size: 12px;
   font-weight: bold;
-  width: 34px;
+  width: 29px;
   height: 34px;
   display: flex;
   align-items: center;
@@ -188,6 +189,47 @@
   font-size: 15px;
   padding: 0 8px;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.price-order-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.order-now-btn {
+  background-color: #ff2600;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.order-now-btn:hover {
+  background-color: #f02101;
+}
+
+.order-now-btn:active {
+  transform: translateY(1px);
+}
+
 
 
 

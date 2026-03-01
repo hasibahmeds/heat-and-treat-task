@@ -4,7 +4,16 @@ import { StoreContext } from "../../context/StoreContext";
 import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
-  const { cartItems, food_list, removeFromCart, getTotalCartAmount, url, token } = useContext(StoreContext);
+  // const { cartItems, food_list, removeFromCart, getTotalCartAmount, url, token } = useContext(StoreContext);
+  const {
+    cartItems,
+    food_list,
+    addToCart,
+    removeFromCart,
+    getTotalCartAmount,
+    url,
+    token,
+  } = useContext(StoreContext);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
@@ -33,7 +42,12 @@ const Cart = () => {
     <div className="cart">
       <div className="cart-items">
         <div className="cart-items-title">
-          <p>Items</p><p>Title</p><p>Price</p><p>Quantity</p><p>Total</p><p>Remove</p>
+          <p>Items</p>
+          <p>Title</p>
+          <p>Price</p>
+          <p>Quantity</p>
+          <p>Total</p>
+          <p>Remove</p>
         </div>
         <br />
         {food_list.map((item) => {
@@ -42,16 +56,49 @@ const Cart = () => {
               <div key={item._id}>
                 <div className="cart-items-item">
                   <img
-                    src={item.image.startsWith("http") ? item.image : `${url}/images/${item.image}`}
+                    src={
+                      item.image.startsWith("http")
+                        ? item.image
+                        : `${url}/images/${item.image}`
+                    }
                     alt={item.name}
                   />
                   <div className="item-info">
                     <p className="item-name">{item.name}</p>
                     <p className="item-price">{item.price} TK</p>
                   </div>
-                  <p className="item-quantity">x{cartItems[item._id]}</p>
-                  <p className="item-total">{item.price * cartItems[item._id]} TK</p>
-                  <p onClick={() => removeFromCart(item._id)} className="cross">×</p>
+                  {/* <p className="item-quantity">x{cartItems[item._id]}</p> */}
+                  <p className="item-quantity">
+                    <span
+                      style={{
+                        cursor: "pointer",
+                        padding: "0 8px",
+                        fontWeight: "bold",
+                      }}
+                      onClick={() => removeFromCart(item._id)}
+                    >
+                      −
+                    </span>
+
+                    {cartItems[item._id]}
+
+                    <span
+                      style={{
+                        cursor: "pointer",
+                        padding: "0 8px",
+                        fontWeight: "bold",
+                      }}
+                      onClick={() => addToCart(item._id)}
+                    >
+                      +
+                    </span>
+                  </p>
+                  <p className="item-total">
+                    {item.price * cartItems[item._id]} TK
+                  </p>
+                  <p onClick={() => removeFromCart(item._id)} className="cross">
+                    ×
+                  </p>
                 </div>
               </div>
             );
