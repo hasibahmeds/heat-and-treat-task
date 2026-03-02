@@ -81,7 +81,7 @@
 
 
 
-import { useContext } from "react";
+import { useContext, useState } from "react"; // ✅ added useState
 import "./FoodItem.css";
 import { assets } from "../../assets/assets";
 import { StoreContext } from "../../context/StoreContext";
@@ -93,18 +93,28 @@ const FoodItem = ({ id, name, price, description, image }) => {
 
   const navigate = useNavigate();
 
+  const [orderLoading, setOrderLoading] = useState(false); // ✅ NEW loading state
+
   const handleOrderNow = async () => {
     if (!token) {
       window.dispatchEvent(new Event("openLogin"));
       return;
     }
 
-    // Add item with quantity 1 if not already in cart
-    if (!cartItems[id]) {
-      await addToCart(id);
-    }
+    try {
+      setOrderLoading(true); // ✅ start loading
 
-    navigate("/cart");
+      // Add item with quantity 1 if not already in cart
+      if (!cartItems[id]) {
+        await addToCart(id);
+      }
+
+      navigate("/cart");
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setOrderLoading(false); // ✅ stop loading
+    }
   };
 
   // Logic to determine image source
@@ -147,8 +157,12 @@ const FoodItem = ({ id, name, price, description, image }) => {
         <div className="price-order-row">
           <p className="food-item-price">{price} TK</p>
 
-          <button className="order-now-btn" onClick={handleOrderNow}>
-            Order Now
+          <button
+            className="order-now-btn"
+            onClick={handleOrderNow}
+            disabled={orderLoading} // ✅ disable while loading
+          >
+            {orderLoading ? "Loading..." : "Order Now"} {/* ✅ text change */}
           </button>
         </div>
       </div>
